@@ -1,0 +1,8 @@
+node_modules/
+.env
+.env.*
+!.env.example
+.allowit/
+*keypair*.json
+*recovery*.json
+.DS_Store
