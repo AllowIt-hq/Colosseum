@@ -10,7 +10,7 @@ Keep the template's architecture, product, API and roadmap file purposes. Adapt 
 
 ## Owner-supplied team text
 
-Alex Astrum: `tech, vision and SI alignment`.
+Alex Astrum: `tech, vision and SI alignment`. Contacts: [GitHub](https://github.com/alexastrum) and [Writing](https://hi.astrum.name).
 Max: `BD, marketing and operations`.
 Igor Stolyarov: `software engineering (front-end)`.
 Mukhammedali Beriktassuly: `software engineering (smart contracts)`.
