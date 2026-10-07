@@ -8,7 +8,7 @@
 - [x] Thin frontend proxy and backend native APIs in main Preview.
 - [x] Bounded Solana Testnet vault lifecycle and recovery.
 - [ ] Hosted generic generation and preference-provider acceptance.
-- [ ] Confirmed event, team contacts, demo URL, video and presentation.
+- [ ] Event, demo URL, video and presentation.
 
 The recorded Testnet cycle includes deployment, funding, executor spending, revocation and withdrawal. See [evidence](evidence.md) for exact revisions and scope.
 
@@ -20,7 +20,7 @@ The recorded Testnet cycle includes deployment, funding, executor spending, revo
 - [ ] Physical-wallet and selected iPhone acceptance.
 - [ ] Explicit Mainnet authority, configuration and security acceptance.
 
-Production retains its earlier integration. These milestones do not identify a scheduled release date.
+Production retains its earlier integration.
 
 ## v2.0 — Additional Rails and Operations
 
@@ -36,5 +36,3 @@ Generic semantic checks do not establish native on-chain semantic enforcement. E
 - [ ] Optional hosted-agent integration outside the MVP.
 - [ ] Distributed recovery and journal coordination.
 - [ ] Additional integration patterns selected through explicit product decisions.
-
-These are future directions. No integration, launch date or ecosystem commitment follows from the template's version headings.

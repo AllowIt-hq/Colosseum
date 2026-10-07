@@ -7,18 +7,18 @@
 
 [Live Application](https://app.allowit.xyz) · [Architecture](docs/architecture.md) · [Repositories](repos/README.md)
 
-Video walkthrough and submission links: pending. Demo image: pending. The live application entrypoint does not identify the reviewed Rust Preview.
+---
 
 ## Submission to Colosseum
-
-Registered event and public submission page: pending confirmation.
 
 | Name | Role | Contact |
 | --- | --- | --- |
 | Alex Astrum | tech, vision and SI alignment | [GitHub](https://github.com/alexastrum) |
-| Max | BD, marketing and operations | Pending |
+| Max | BD, marketing and operations | [GitHub](https://github.com/mks044) |
 | Igor Stolyarov | software engineering (front-end) | [GitHub](https://github.com/Magurin) |
 | Mukhammedali Beriktassuly | software engineering (smart contracts) | [GitHub](https://github.com/beriktassuly) |
+
+---
 
 ## Problem and Solution
 
@@ -122,14 +122,11 @@ See the [full roadmap](docs/roadmap.md) and [evidence](docs/evidence.md).
 ## Resources
 
 - [Live Application](https://app.allowit.xyz)
-- [Public SDK](repos/AllowIt-hq--allowit-sdk/README.md)
-- [Public CLI](repos/AllowIt-hq--allowit-cli/README.md)
-- [Public Solana Contracts](repos/AllowIt-hq--allowit-contracts-solana/README.md)
+- [SDK](repos/AllowIt-hq--allowit-sdk/README.md)
+- [CLI](repos/AllowIt-hq--allowit-cli/README.md)
+- [Solana Contracts](repos/AllowIt-hq--allowit-contracts-solana/README.md)
 - [Architecture](docs/architecture.md) and [validation evidence](docs/evidence.md)
-- Presentation and video demo: pending. Team contacts appear in the submission section.
 
 ## License
 
 MIT for this documentation. See [LICENSE](LICENSE). Included source repositories retain their own licenses.
-
-Adapted from the [original Colosseum template](https://github.com/Marakaya/colosseum_example/tree/315695b07dbf4c2fff3c0144a31c9153ddc0fdce). Use the [completion guide](docs/completion-guide.md) for outstanding submission fields.
