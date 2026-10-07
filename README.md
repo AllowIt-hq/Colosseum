@@ -22,7 +22,7 @@
 
 ## Problem and Solution
 
-People already hand AI agents real work. They do not yet hand them the money. AllowIt connects the two with a policy. The agent acts inside the policy, asks you when a request is unclear and stops at the boundary.
+AllowIt lets the agents that work for you act with the autonomy and resource access you are comfortable with. You set the terms. Your feedback makes them more personal over time.
 
 ### 1. A wallet key gives too much authority
 
@@ -40,13 +40,13 @@ People already hand AI agents real work. They do not yet hand them the money. Al
 
 **Problem:** A spending limit says how much. It cannot say whether a purchase serves the job you described.
 
-**AllowIt:** The backend can evaluate generic restricted policies with semantic evidence tied to the exact request. It sends unclear requests to you. The native vault checks executor identity, standing approval, asset, daily limit, nonce and policy revision.
+**AllowIt:** AllowIt policies can do more than count. A restricted policy evaluates what the agent asks to do. When a request needs your judgement, the policy engine asks you. Through dialogue, you can refine the policy so later decisions follow your judgement.
 
 ### 4. Plans change
 
 **Problem:** When the job ends or goes wrong, you must stop the agent, get the funds back and know what already happened.
 
-**AllowIt:** You can pause the vault, tune the limit, revoke the approval or withdraw the funds. Signed journals and finalized receipts show what each operation did. The client uses them to recover an operation after a lost response.
+**AllowIt:** You stay in control when your plans change. In the native vault, an agent works under a standing approval for one asset, with a daily limit. You can pause spending, tune its limit, revoke its approval or withdraw your funds at any time.
 
 ## Why Solana
 

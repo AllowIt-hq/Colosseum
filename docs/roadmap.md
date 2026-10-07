@@ -34,5 +34,6 @@ Generic semantic checks do not establish native on-chain semantic enforcement. E
 ## v3.0 — Ecosystem
 
 - [ ] Optional hosted-agent integration outside the MVP.
+- [ ] Delegation: let an agent delegate parts of its assigned work to sub-agents, within the terms its owner sets.
 - [ ] Distributed recovery and journal coordination.
 - [ ] Additional integration patterns selected through explicit product decisions.

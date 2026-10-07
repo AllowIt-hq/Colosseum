@@ -4,7 +4,7 @@
 
 > AllowIt lets your AI agents spend and invest, within a policy you set.
 
-You describe the job, the money and the judgement calls in your own words. AllowIt turns them into a policy, gives the agent a skill and checks every request. Inside the policy, the agent goes ahead. Unclear requests come back to you. When you revoke spending authority, further spending stops.
+You decide how much freedom each agent gets. AllowIt gives any agent you control the autonomy and resource access you are comfortable with. Within those terms, the agent does the work you assign at its own pace. When a request needs your judgement, AllowIt asks you, and you can use that dialogue to refine your policies.
 
 Policy evaluation follows two paths:
 
@@ -21,10 +21,10 @@ The Rust SDK and backend handle policy requests, signing and recovery.
 
 ## Core Value Propositions
 
-1. **You set the terms.** You choose the executor and the daily limit, and you approve the policy once.
-2. **The agent keeps working.** Transfers that pass the policy need no new signature from you.
-3. **You keep the key.** Your owner key stays separate from the executor key. You can pause, tune, revoke or withdraw at any time.
-4. **You can see what happened.** Finalized receipts and signed journals record each operation. The client uses them to recover after a lost response.
+1. **Your terms.** Each agent gets the autonomy and resource access that you choose.
+2. **Your judgement.** A dialogue with the policy engine lets you explain what you mean. Your feedback personalizes your policies.
+3. **Their pace.** Within your terms, agents finish their work without asking you about each step.
+4. **Your control.** Pause spending, tune the limit, revoke approval or withdraw at any time.
 
 In practice, you inspect the policy, sign the vault initialization and standing approval, then fund the vault in a separate step. The agent receives its skill and its private executor configuration. From then on, you can inspect receipts, tune the limit, pause, revoke or withdraw.
 
