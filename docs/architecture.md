@@ -34,13 +34,13 @@ Generic restricted policies can request Jev evidence or owner input. The host bi
 
 ### Policy SDK
 
-The [SDK submodule](../repos/AllowIt-hq--allowit-sdk/README.md) supplies two separate Rust packages for the native target. The root package compiles restricted Rust, validates typed intermediate representation, evaluates policies and supplies registry, workflow and language-server metadata. It rejects arbitrary native execution. The `native-rust/` package validates Solana releases, prepares transactions, signs locally, validates receipts and maintains an operation journal.
+The [SDK submodule](../repos/AllowIt-hq--allowit-sdk/README.md) ([GitHub README](https://github.com/AllowIt-hq/allowit-sdk/blob/main/README.md)) supplies two separate Rust packages for the native target. The root package compiles restricted Rust, validates typed intermediate representation, evaluates policies and supplies registry, workflow and language-server metadata. It rejects arbitrary native execution. The `native-rust/` package validates Solana releases, prepares transactions, signs locally, validates receipts and maintains an operation journal.
 
 The SDK also retains JavaScript lifecycle references under `native/` and generic IR contract adapters under `contracts/`. Those adapters do not supply the recorded native vault release. Its shared programs come from the separate Solana contracts repository.
 
 ### Native CLI
 
-The [CLI submodule](../repos/AllowIt-hq--allowit-cli/README.md) supplies the agent and owner command surface. HTTP commands use the application API. Native policy commands call the Solana SDK in the same process. The binary needs no Node runtime or backend crate dependency. Reviewed SDK source mirrors keep CLI builds reproducible.
+The [CLI submodule](../repos/AllowIt-hq--allowit-cli/README.md) ([GitHub README](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md)) supplies the agent and owner command surface. HTTP commands use the application API. Native policy commands call the Solana SDK in the same process. The binary needs no Node runtime or backend crate dependency. Reviewed SDK source mirrors keep CLI builds reproducible.
 
 ### Rust Backend
 
@@ -52,7 +52,7 @@ The private `app.allowIt.xyz` repository contains the React frontend, wallet ada
 
 ### Solana Programs
 
-The [Solana contracts submodule](../repos/AllowIt-hq--allowit-contracts-solana/README.md) supplies the shared policy and custody programs. Contract builds produce Solana executables separately from application builds. The organization also maintains separate website and Stellar contract repositories.
+The [Solana contracts submodule](../repos/AllowIt-hq--allowit-contracts-solana/README.md) ([GitHub README](https://github.com/AllowIt-hq/allowit-contracts-solana/blob/main/README.md)) supplies the shared policy and custody programs. Contract builds produce Solana executables separately from application builds. The organization also maintains separate website and Stellar contract repositories.
 
 Platform release and owner instance creation are separate operations. The release operator builds shared custody and policy executables, deploys them and verifies finalized identities. Acceptance checks genesis, program IDs, loader linkage, executable hashes and upgrade authority. Source hashes and executable hashes identify different artifacts. The current client requires both pinned programs to be immutable.
 

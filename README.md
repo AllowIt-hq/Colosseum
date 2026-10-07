@@ -95,7 +95,7 @@ See [architecture](docs/architecture.md) for components, signing, persistence an
 
 ## Quick Start
 
-Prerequisites: Git, Rust and an explicitly configured native test environment. Use the [CLI requirements](repos/AllowIt-hq--allowit-cli/README.md#build-from-source).
+Prerequisites: Git, Rust and an explicitly configured native test environment. Use the [CLI requirements](repos/AllowIt-hq--allowit-cli/README.md#build-from-source) ([GitHub README](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md#build-from-source)).
 
 ```sh
 git clone --recurse-submodules https://github.com/AllowIt-hq/Colosseum.git
@@ -125,9 +125,9 @@ See the [full roadmap](docs/roadmap.md) and [evidence](https://explorer.solana.c
 
 - [Website](https://allowit.xyz)
 - [Live Application](https://app.allowit.xyz)
-- [SDK](repos/AllowIt-hq--allowit-sdk/README.md)
-- [CLI](repos/AllowIt-hq--allowit-cli/README.md)
-- [Solana Contracts](repos/AllowIt-hq--allowit-contracts-solana/README.md)
+- [SDK](repos/AllowIt-hq--allowit-sdk/README.md) ([GitHub README](https://github.com/AllowIt-hq/allowit-sdk/blob/main/README.md))
+- [CLI](repos/AllowIt-hq--allowit-cli/README.md) ([GitHub README](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md))
+- [Solana Contracts](repos/AllowIt-hq--allowit-contracts-solana/README.md) ([GitHub README](https://github.com/AllowIt-hq/allowit-contracts-solana/blob/main/README.md))
 - [Architecture](docs/architecture.md) and [validation evidence](https://explorer.solana.com/?cluster=testnet)
 
 ## License

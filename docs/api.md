@@ -116,7 +116,7 @@ The response reports status, policy runtime identity, configured provider availa
 
 ## Native Rust SDK and CLI
 
-The [SDK](../repos/AllowIt-hq--allowit-sdk/README.md) supplies policy and Solana client libraries. The [CLI](../repos/AllowIt-hq--allowit-cli/README.md) calls native modules directly. The browser uses backend APIs and retains wallet intent checks and an App-owned journal.
+The [SDK](../repos/AllowIt-hq--allowit-sdk/README.md) ([GitHub README](https://github.com/AllowIt-hq/allowit-sdk/blob/main/README.md)) supplies policy and Solana client libraries. The [CLI](../repos/AllowIt-hq--allowit-cli/README.md) ([GitHub README](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md)) calls native modules directly. The browser uses backend APIs and retains wallet intent checks and an App-owned journal.
 
 ### Build and HTTP Commands
 
@@ -134,7 +134,7 @@ Set `ALLOWIT_URL` to the exact service origin. Set `ALLOWIT_TOKEN` to the policy
 - `exec` requests an operation under the selected application profile.
 - `status` reads the durable result for the original request.
 
-Use the [CLI command reference](../repos/AllowIt-hq--allowit-cli/README.md#use) for exact arguments and response states. Permission, owner input, submission and settlement are separate results. Preserve the request ID when a response is uncertain.
+Use the [CLI command reference](../repos/AllowIt-hq--allowit-cli/README.md#use) ([GitHub README](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md#use)) for exact arguments and response states. Permission, owner input, submission and settlement are separate results. Preserve the request ID when a response is uncertain.
 
 ### Native Owner and Executor Commands
 
@@ -153,7 +153,7 @@ These commands form an example sequence. Each command requires its own result ch
 
 Configure `ALLOWIT_POLICY_DIR`, `ALLOWIT_NETWORK`, `ALLOWIT_RPC_URL`, `ALLOWIT_MINT`, `ALLOWIT_EXECUTOR` and `ALLOWIT_DEPLOYMENT_FILE`. Set `ALLOWIT_REQUEST_ID` for the intended operation. Keep it unchanged on retries. Owner operations use `ALLOWIT_OWNER_KEYPAIR`. Execution uses `ALLOWIT_EXECUTOR_KEYPAIR` and the public `ALLOWIT_OWNER`. Status needs no signing key. Native commands do not require the ordinary HTTP capability.
 
-Testnet is the default. Devnet requires explicit network and RPC configuration. The native CLI refuses Mainnet. Amounts are exact decimal strings. See [native configuration](../repos/AllowIt-hq--allowit-cli/README.md#owner-policy-lifecycle).
+Testnet is the default. Devnet requires explicit network and RPC configuration. The native CLI refuses Mainnet. Amounts are exact decimal strings. See [native configuration](../repos/AllowIt-hq--allowit-cli/README.md#owner-policy-lifecycle) ([GitHub README](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md#owner-policy-lifecycle)).
 
 ## Result Handling
 
@@ -167,4 +167,4 @@ Testnet is the default. Devnet requires explicit network and RPC configuration. 
 | 6 | Replay of an earlier settled operation. |
 | 20 | Policy denial or finalized failure. |
 
-HTTP command exits differ. Use the [HTTP state reference](../repos/AllowIt-hq--allowit-cli/README.md#states-and-exit-codes). `status` never creates a replacement spend. Additional funding or withdrawal after an expired uncertain operation requires explicit owner consent. Set `ALLOWIT_ADDITIONAL_OWNER_OPERATION=1` and a fresh `ALLOWIT_REQUEST_ID` for that additional operation.
+HTTP command exits differ. Use the [HTTP state reference](../repos/AllowIt-hq--allowit-cli/README.md#states-and-exit-codes) ([GitHub README](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md#states-and-exit-codes)). `status` never creates a replacement spend. Additional funding or withdrawal after an expired uncertain operation requires explicit owner consent. Set `ALLOWIT_ADDITIONAL_OWNER_OPERATION=1` and a fresh `ALLOWIT_REQUEST_ID` for that additional operation.
