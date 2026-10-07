@@ -10,7 +10,7 @@ Maintainer references: [build dependencies](https://github.com/ackrate/ackrate-p
 
 ## Current source references
 
-The public SDK and CLI are pinned as [submodules](../repos/README.md). The other component repositories remain private and are not included as submodules.
+The public SDK, CLI and Solana contracts are pinned as [submodules](../repos/README.md). The backend, application, website and Stellar contracts remain private.
 
 | Component | Main revision read on October 7 |
 | --- | --- |
@@ -18,7 +18,7 @@ The public SDK and CLI are pinned as [submodules](../repos/README.md). The other
 | CLI | `c7da3f2689e35fb82f0b97947bd7d5a2286c559a` |
 | Rust backend | `f5a728619aad4ada186b0037bc531187a5dff17c` |
 | Frontend | `e385529897443cb5abc5ce7233021d9c3a529c04` |
-| Solana contracts | `2554df88e043e4780072d7f280b067415e768192` |
+| Solana contracts | `c117bf93f502bf3a54d4a88d7907eff2a59de740` |
 
 Current source and tested release pins serve different purposes. The submodule gitlinks identify the exact public source snapshots supplied with this report.
 

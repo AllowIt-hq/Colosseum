@@ -1,12 +1,12 @@
 # Public repositories
 
-The organization has three public repositories on October 7, 2026: Colosseum, the SDK and the CLI. Colosseum is this repository. The other two are pinned submodules.
+The organization has four public repositories on October 7, 2026: Colosseum, the SDK, the CLI and Solana contracts. Colosseum is this repository. The other three are pinned submodules.
 
 ## [AllowIt SDK](AllowIt-hq--allowit-sdk/)
 
 [GitHub](https://github.com/AllowIt-hq/allowit-sdk) · [README](AllowIt-hq--allowit-sdk/README.md)
 
-Restricted Rust compiler, evaluator, registry and language server. The separate `native-rust/` package supplies the Solana transaction, signing, receipt and journal client. The repository retains JavaScript lifecycle references and generic IR contract adapters. Native custody programs belong to the separate private Solana contracts repository. See [architecture](../docs/architecture.md).
+Restricted Rust compiler, evaluator, registry and language server. The separate `native-rust/` package supplies the Solana transaction, signing, receipt and journal client. The repository retains JavaScript lifecycle references and generic IR contract adapters. Native custody programs belong to the separate Solana contracts repository. See [architecture](../docs/architecture.md).
 
 ## [AllowIt CLI](AllowIt-hq--allowit-cli/)
 
@@ -15,6 +15,12 @@ Restricted Rust compiler, evaluator, registry and language server. The separate 
 The pinned SDK README still describes the action CLI as Go. The CLI supplied here uses Rust.
 
 Native Rust agent and owner commands. HTTP commands use the service API. Native policy commands embed the SDK. See [commands](../docs/api.md).
+
+## [AllowIt Solana Contracts](AllowIt-hq--allowit-contracts-solana/)
+
+[GitHub](https://github.com/AllowIt-hq/allowit-contracts-solana) · [README](AllowIt-hq--allowit-contracts-solana/README.md)
+
+Shared native Rust policy and custody programs. Owner instances create PDA state and SPL token accounts under an accepted shared release. See [architecture](../docs/architecture.md) and [release evidence](../docs/evidence.md).
 
 ## Retrieve the pinned sources
 
@@ -25,4 +31,4 @@ git submodule status --recursive
 
 Update gitlinks only after reviewing compatible revisions. Source changes belong in the child repository. This report does not change child source.
 
-The backend, application, website and Solana/Stellar contract repositories are private. They remain separate architecture components. No private repository is included here.
+The backend, application, website and Stellar contract repositories are private. They remain separate architecture components. No private repository is included here.

@@ -52,7 +52,7 @@ The private `app.allowIt.xyz` repository contains the React frontend, wallet ada
 
 ### Solana Programs
 
-The private `allowit-contracts-solana` repository supplies the shared policy and custody programs. Contract builds produce Solana executables separately from application builds. The organization also maintains separate website and Stellar contract repositories.
+The [public Solana contracts submodule](../repos/AllowIt-hq--allowit-contracts-solana/README.md) supplies the shared policy and custody programs. Contract builds produce Solana executables separately from application builds. The organization also maintains separate website and Stellar contract repositories.
 
 Platform release and owner instance creation are separate operations. The release operator builds shared custody and policy executables, deploys them and verifies finalized identities. Acceptance checks genesis, program IDs, loader linkage, executable hashes and upgrade authority. Source hashes and executable hashes identify different artifacts. The current client requires both pinned programs to be immutable.
 

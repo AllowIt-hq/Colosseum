@@ -121,6 +121,7 @@ See the [full roadmap](docs/roadmap.md) and [evidence](docs/evidence.md).
 - [Live Application](https://app.allowit.xyz)
 - [Public SDK](repos/AllowIt-hq--allowit-sdk/README.md)
 - [Public CLI](repos/AllowIt-hq--allowit-cli/README.md)
+- [Public Solana Contracts](repos/AllowIt-hq--allowit-contracts-solana/README.md)
 - [Architecture](docs/architecture.md) and [validation evidence](docs/evidence.md)
 - Presentation, video demo and public team contacts: pending.
 
