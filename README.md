@@ -1,11 +1,11 @@
-# AllowIt — Policy-Controlled Agent Spending
+# AllowIt — Go on. On your terms.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-14F195.svg)](LICENSE)
 [![Solana Testnet](https://img.shields.io/badge/Solana-Testnet-9945FF)](docs/evidence.md)
 
-> AllowIt gives agents bounded spending authority through owner-approved policies, a native Rust SDK and Solana vaults.
+> AllowIt lets your AI agents spend and invest, within a policy you set.
 
-[Live Application](https://app.allowit.xyz) · [Architecture](docs/architecture.md) · [Repositories](repos/README.md)
+[Website](https://allowit.xyz) · [Live Application](https://app.allowit.xyz) · [Architecture](docs/architecture.md) · [Repositories](repos/README.md)
 
 ---
 
@@ -22,29 +22,29 @@
 
 ## Problem and Solution
 
-### 1. Excessive Agent Authority
+### 1. Give the agent a policy
 
-**Problem:** An unrestricted signer can exceed the owner's intended spending authority.
+**Problem:** An agent needs money to finish a job. A wallet key gives it more authority than the job requires.
 
-**AllowIt:** A separate executor signs bounded vault spending. The owner retains approval, revocation and withdrawal authority.
+**AllowIt:** You approve a policy. The native vault gives a separate executor spending authority within a daily limit. You keep your owner key.
 
-### 2. Repeated Owner Signing
+### 2. Let it work within the policy
 
-**Problem:** Approval of each transfer interrupts unattended execution.
+**Problem:** Signing each payment interrupts the agent's work.
 
-**AllowIt:** The native vault uses standing owner approval and a chain-enforced daily limit.
+**AllowIt:** Standing approval lets the executor spend within the native policy. Solana checks the policy and transfer in one transaction.
 
-### 3. Unclear Policy Boundaries
+### 3. Keep the judgement calls
 
-**Problem:** A policy description can promise checks that the actual payment path does not enforce.
+**Problem:** A numeric limit cannot decide whether a purchase fits your intent.
 
-**AllowIt:** The SDK validates restricted Rust. The native kernel exposes its pinned approval and daily-limit rules. Generic semantic evaluation remains separate.
+**AllowIt:** Generic policies can request semantic evidence or ask you to decide. The native vault enforces approval and daily spending limits.
 
-### 4. Uncertain Submission
+### 4. Keep control of the money
 
-**Problem:** A lost response can cause an agent to submit another spend.
+**Problem:** You need to stop spending and recover funds when the job changes.
 
-**AllowIt:** Signed journals preserve the original identity. Recovery checks finalized effects before recording settlement.
+**AllowIt:** You can pause, revoke or withdraw. Signed journals and finalized receipts let the client recover an operation after a lost response.
 
 ## Why Solana
 
@@ -121,6 +121,7 @@ See the [full roadmap](docs/roadmap.md) and [evidence](docs/evidence.md).
 
 ## Resources
 
+- [Website](https://allowit.xyz)
 - [Live Application](https://app.allowit.xyz)
 - [SDK](repos/AllowIt-hq--allowit-sdk/README.md)
 - [CLI](repos/AllowIt-hq--allowit-cli/README.md)
