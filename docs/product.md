@@ -1,33 +1,36 @@
 # Product
 
-AllowIt lets an owner grant an agent bounded spending authority. The owner chooses the policy, supplies funds and retains approval and recovery controls. The agent uses the Rust CLI to inspect permissions, request decisions and execute supported operations.
+## What is AllowIt?
 
-## Owner and agent journey
+AllowIt provides owner-approved spending controls for agents. The native Rust SDK and backend validate policy requests. Shared Solana programs enforce the native vault policy. The owner retains signing and recovery controls.
 
-1. Select the supported native policy and inspect its pinned Rust source.
-2. Review the network, mint, executor and daily limit.
-3. Sign vault initialization and standing approval.
-4. Fund the vault in a separate owner operation.
-5. Give the executor the generated skill and its private configuration.
-6. Inspect finalized spending records and remaining funds.
-7. Tune, pause, revoke or withdraw through owner controls.
+The native kernel binds approval, executor, asset, daily spending, nonce and revision. Generic restricted policies can also request semantic evidence or owner input through the backend. Those functions do not extend the native kernel's on-chain rules.
 
-The browser uses backend APIs for validation and preparation. The owner wallet signs the exact prepared operation. Native owner CLI commands provide another local signing surface. The executor signs spending with its own key.
+## Target Users
 
-## Policy profiles
+- **Agent builders:** inspect permissions and execute supported operations through the Rust CLI.
+- **Wallet owners:** fund a bounded vault and retain pause, revocation and withdrawal controls.
+- **Application developers:** use the native SDK and backend APIs for policy, signing and recovery workflows.
 
-The native Solana profile uses shared custody and policy programs. Its pinned kernel enforces approval, executor identity, asset, daily spending, nonce and revision. The daily budget applies per vault. Recipients remain selectable within that budget.
+## Core Value Propositions
 
-The application also supports restricted Rust policy evaluation, semantic evidence and owner questions. Those decisions use the backend policy SDK. They do not add semantic-purpose enforcement to the native kernel. The separate allowance profile requires owner signing for each transfer.
+1. **Bounded authority:** the designated executor spends within the approved native policy.
+2. **Separate signing:** the owner keeps the owner key. The executor uses its own key.
+3. **Reviewed policy behavior:** source, executable identity and actual enforcement remain explicit.
+4. **Recoverable operations:** signed proofs preserve original identity through lost responses and reconciliation.
 
-## Recovery and controls
+An owner inspects the policy, signs initialization and standing approval, then funds the vault separately. The executor receives its skill and private configuration. The owner can inspect receipts, tune the limit, pause, revoke or withdraw.
 
-Exact signed proofs survive lost responses. Status reconciles the original operation. A displayed approval, submitted transaction or local journal entry does not establish settlement. The system records spending after receipt checks verify finalized effects.
+## How It Differs from Unrestricted Agent Signing
 
-Zero daily limit pauses native spending. Revocation removes standing approval. Owner withdrawal does not require successful policy execution. Owner and executor keys remain separate.
+| Control | Unrestricted agent signer | AllowIt native vault |
+| --- | --- | --- |
+| Spending authority | Authority follows the key's ordinary account permissions. | Designated executor, standing approval and bound daily policy. |
+| Owner key | The agent can hold the spending account's signer. | Owner key stays separate from the executor. |
+| Budget | Depends on external controls. | Shared custody enforces the per-vault daily ceiling. |
+| Recovery | Depends on the client implementation. | SDK journals original proofs and checks finalized effects. |
+| Owner control | Depends on account permissions. | Owner can pause, revoke and withdraw. |
 
-## Current scope
-
-The bounded Rust lifecycle passes on Solana Testnet with a six-decimal test token. Main Preview uses the Rust backend and thin frontend proxy. Hosted generic policy generation still requires provider repair. Production release, physical wallet acceptance and additional rails have separate completion criteria.
+The native profile permits recipients within its daily cap. The separate allowance profile requires owner signing for each transfer. Main Preview uses the Rust backend. Hosted generic generation and Production release retain separate acceptance work.
 
 [Architecture](architecture.md) · [Evidence](evidence.md) · [Roadmap](roadmap.md)

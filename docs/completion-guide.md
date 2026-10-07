@@ -1,29 +1,35 @@
-# Submission checklist
+# Colosseum Template Completion Report
 
-Use the [architecture](architecture.md), [product](product.md), [commands](api.md) and [evidence](evidence.md) as the technical report. Keep the submission focused on the native Rust architecture and bounded Solana vault lifecycle.
+Follow the [original template](https://github.com/Marakaya/colosseum_example/tree/315695b07dbf4c2fff3c0144a31c9153ddc0fdce). Preserve its submission sections and four report files. Replace BBM content with AllowIt facts from the latest authored architecture.
 
-## Required submission material
+| Template section | How to fill it |
+| --- | --- |
+| Title, description, badges | Identify AllowIt and bounded agent spending. Link only real licenses, networks and validation. |
+| Demo links and image | Supply the configured demo, video and current application image. Keep missing assets explicit. |
+| Hackathon and team | Supply the confirmed event, submission page, team roles and contacts. |
+| Problem and Solution | Describe excessive authority, repeated signing, policy boundaries and uncertain submission. |
+| Why Solana | Explain owner-bound accounts, shared programs, atomic accounting and finalized effects. |
+| Summary of Features | Describe native Rust SDK/CLI, Rust backend, frontend proxy, policy lifecycle and recovery. |
+| Tech Stack | List the actual Rust, React/Vite/TypeScript, wallet, SQL and Solana components. |
+| Architecture | Summarize the latest frontend, backend, SDK, CLI and shared-program boundaries. Link the full report. |
+| Quick Start | Initialize public submodules and build the Rust CLI. Link explicit environment and signing requirements. |
+| Roadmap | Use the template's version groups. Keep completed work, release acceptance and future integrations distinct. |
+| Resources | Link the application, public repositories, reports, demo and presentation. |
+| License | Retain the documentation license. Reference source-repository licenses separately. |
 
-- Check the registered event and public project page.
-- Supply team names, roles and public contact links.
-- Supply the configured demo URL, video and presentation.
-- Show owner review, deployment, funding, executor spending and finalized receipts.
-- Show one policy denial, recovery, revocation and withdrawal.
-- Identify the exact app, backend, CLI, SDK and contract revisions used in the demo.
-- State the network and test mint clearly.
+## Report Files
 
-## Repository and release checks
+- `docs/architecture.md`: System Overview, Components and a relevant architecture comparison. Use the latest authored diagrams and keep approximately two to three pages.
+- `docs/product.md`: What is AllowIt, Target Users, Core Value Propositions and a relevant alternative comparison.
+- `docs/api.md`: actual endpoints, requests, result meanings and native SDK/CLI examples.
+- `docs/roadmap.md`: current MVP, Production release, additional operations and ecosystem directions in the template's version groups.
 
-Initialize the [public submodules](../repos/README.md) at their committed gitlinks. Build the CLI from its pinned source. Follow its checksum and provenance instructions when using workflow binaries. Keep private backend, frontend and contract repositories outside the public submodule set.
+The template's latency comparison and BBM competitors belong to its original product. Replace them with AllowIt authority and signing comparisons. Preserve the purpose of each section.
 
-Match public release configuration with the actual program identities before execution. Separate source identity from deployed executable identity. Use the owner wallet or local owner signer for owner operations. Use only the designated executor signer for native spending.
+Use [public repositories](../repos/README.md) for source links. Retain [evidence](evidence.md) as a supporting page. Do not create fake API routes, performance claims, screenshots or team details to fill template fields.
 
-Keep capabilities, signer files, journals and signed proofs out of public recordings and Git. A generated executor bundle can contain a private audit capability.
+## Current Completion
 
-## Claims and readiness
+The reports use the latest native Rust architecture. Main Preview uses the frontend proxy and Rust backend. The bounded Testnet lifecycle has separate evidence. Production, hosted generic-provider acceptance and physical-wallet acceptance remain separate.
 
-Describe current Rust Preview behavior and the recorded Testnet cycle. Keep Production migration, hosted provider repair, physical-wallet acceptance and native binary publication in the [roadmap](roadmap.md).
-
-Describe the native kernel's actual approval and daily-limit rules. Generic policy evaluation and Jev evidence are separate capabilities. PaySH, Etherfuse and Stellar need their own integration and delivery evidence.
-
-The repository's [MIT notice](../LICENSE) applies to this documentation. The [SDK license](../repos/AllowIt-hq--allowit-sdk/LICENSE) and [CLI license](../repos/AllowIt-hq--allowit-cli/LICENSE) remain in their source repositories. Confirm licenses separately for other components.
+The event, team contacts, configured demo URL, application image, video and presentation remain pending. Complete those fields with confirmed material before submission.

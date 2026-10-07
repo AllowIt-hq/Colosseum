@@ -1,8 +1,125 @@
-# Commands and API
+# API Reference
 
-The [Rust CLI](../repos/AllowIt-hq--allowit-cli/README.md) has two command groups. HTTP commands use the application service. Native lifecycle commands use the [Solana SDK](../repos/AllowIt-hq--allowit-sdk/native-rust/src/lib.rs) locally.
+## AllowIt Backend Endpoints
 
-## Build and HTTP commands
+The frontend proxy forwards versioned API requests with original authentication, cookies and request identity. Owner and public POST routes require an allowlisted frontend Origin. `native/report` uses the bearer audit capability. Owner routes require the authenticated wallet session. Agent reporting credentials grant no owner or signing authority.
+
+### Generate Native Policy
+
+```text
+POST /api/native/generate
+```
+
+**Request:**
+
+```json
+{
+  "network": "solana:testnet",
+  "prompt": "Spend up to 5 test tokens per day"
+}
+```
+
+**Response:** `policy`, `release` and `diagnostics` describe the validated pinned profile. Unsupported constraints fail. Native generation parameterizes the existing daily-limit template.
+
+### Save Native Policy
+
+```text
+POST /api/native/save
+```
+
+**Request:** `{policy}` contains the exact generated and validated policy. The authenticated owner wallet session saves its immutable identity. Use the stored policy ID as `policyId` in subsequent operations.
+
+### Prepare and Submit Owner Operation
+
+```text
+POST /api/native/prepare
+POST /api/native/submit
+```
+
+**Preparation request:**
+
+```json
+{
+  "policyId": "YOUR_POLICY_ID",
+  "requestId": "fund-001",
+  "method": "fund",
+  "options": {
+    "amount": "2"
+  }
+}
+```
+
+Preparation returns the original unsigned message, intent, binding and validity metadata. Check the exact wallet intent before signing.
+
+**Submission request:**
+
+```json
+{
+  "policyId": "YOUR_POLICY_ID",
+  "requestId": "fund-001",
+  "signedBytes": "BASE64_SIGNED_TRANSACTION"
+}
+```
+
+The backend persists the owner-signed proof in SQL before broadcast. Submission alone does not establish settlement.
+
+### Get Operation Status and Recover
+
+```text
+POST /api/native/confirm
+POST /api/native/recover
+```
+
+**Request:**
+
+```json
+{
+  "policyId": "YOUR_POLICY_ID",
+  "requestId": "fund-001"
+}
+```
+
+These operations reconcile the original finalized receipt or method-specific expiry evidence. They do not sign or broadcast a replacement. Uncertain funding or withdrawal can require another explicitly authorized owner operation.
+
+### Read Release and Vault State
+
+```text
+GET /api/native/release
+POST /api/native/state
+```
+
+Release metadata identifies the pinned sources and artifacts. It does not prove deployment. State takes `{policyId}` and returns verified state, binding and public operations.
+
+### Export the Executor Bundle
+
+```text
+POST /api/native/export
+```
+
+**Request:** `{policyId}` identifies the saved policy. The owner session receives verified state, the skill and an executor bundle with a private audit capability. Give that bundle only to the designated executor. The capability permits proof reporting, not owner actions or signing.
+
+### Report Executor Proof
+
+```text
+POST /api/native/report
+```
+
+The audit capability from `native/export` permits `{policyId, record}` for its bound policy. When this capability exists, the CLI requires durable SQL acknowledgement before executor broadcast. The backend independently reconciles receipts and vault nonces. Keep the capability private.
+
+### Health Check
+
+```text
+GET /api/health
+```
+
+The response reports status, policy runtime identity, configured provider availability and source revision. Health metadata does not establish financial settlement or successful provider inference.
+
+## Native Rust SDK and CLI
+
+The [SDK](../repos/AllowIt-hq--allowit-sdk/README.md) supplies policy and Solana client libraries. The [CLI](../repos/AllowIt-hq--allowit-cli/README.md) calls native modules directly. The browser uses backend APIs and retains wallet intent checks and an App-owned journal.
+
+### Build and HTTP Commands
+
 
 ```sh
 cd repos/AllowIt-hq--allowit-cli
@@ -19,7 +136,7 @@ Set `ALLOWIT_URL` to the exact service origin. Set `ALLOWIT_TOKEN` to the policy
 
 Use the [CLI command reference](../repos/AllowIt-hq--allowit-cli/README.md#use) for exact arguments and response states. Permission, owner input, submission and settlement are separate results. Preserve the request ID when a response is uncertain.
 
-## Native owner and executor commands
+### Native Owner and Executor Commands
 
 ```sh
 allowit policy generate 'Spend up to 5 test tokens per day'
@@ -38,15 +155,8 @@ Configure `ALLOWIT_POLICY_DIR`, `ALLOWIT_NETWORK`, `ALLOWIT_RPC_URL`, `ALLOWIT_M
 
 Testnet is the default. Devnet requires explicit network and RPC configuration. The native CLI refuses Mainnet. Amounts are exact decimal strings. See [native configuration](../repos/AllowIt-hq--allowit-cli/README.md#owner-policy-lifecycle).
 
-## Backend and signing protocol
+## Result Handling
 
-The frontend proxy forwards versioned API requests with original authentication and request identity. Backend APIs supply release metadata, native generation, validation, transaction preparation, submission, status and recovery. Native backend routes use the SDK directly. Browser wallet intent checks and journals remain in the application.
-
-Browser owner operations persist signed proofs locally and in backend SQL before broadcast. An exported hosted-executor audit capability allows reporting to `/api/native/report`. When that capability exists, the CLI requires durable acknowledgement before executor broadcast. Standalone native execution uses its local journal and RPC. The backend independently reconciles receipts and vault nonces. That capability grants no owner or signing authority.
-
-Keep exported bundles, journals and capabilities private. A bare public executor address contains no secret. A backend-exported executor bundle can contain a reporting secret.
-
-## Result handling
 
 | Native exit | Meaning |
 | --- | --- |

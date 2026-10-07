@@ -1,24 +1,40 @@
 # Roadmap
 
-Updated October 7, 2026.
+## v1.0 — Hackathon MVP (current)
 
-## Completed architecture and staging work
+- [x] Native Rust policy SDK and separate Solana client.
+- [x] Native Rust agent and owner CLI source.
+- [x] Rust backend with transactional storage and provider adapters.
+- [x] Thin frontend proxy and backend native APIs in main Preview.
+- [x] Bounded Solana Testnet vault lifecycle and recovery.
+- [ ] Hosted generic generation and preference-provider acceptance.
+- [ ] Confirmed event, team contacts, demo URL, video and presentation.
 
-The native Rust SDK and CLI source ports are merged. The Rust backend composes API, engine, storage and integrations. Main Preview reaches it through the frontend proxy. Native browser validation and preparation use backend APIs.
+The recorded Testnet cycle includes deployment, funding, executor spending, revocation and withdrawal. See [evidence](evidence.md) for exact revisions and scope.
 
-A bounded Solana Testnet cycle completed deployment, funding, executor spending, revocation and withdrawal. Original signed proofs, SQL records and finalized effects survived recovery and backend redeployment. See [evidence](evidence.md).
+## v1.1 — Production Release
 
-## Remaining release work
+- [ ] PostgreSQL restore and pending-allocation continuity.
+- [ ] Independent backend Git routing and Production acceptance.
+- [ ] Published native CLI Release with platform checksums and provenance.
+- [ ] Physical-wallet and selected iPhone acceptance.
+- [ ] Explicit Mainnet authority, configuration and security acceptance.
 
-- Repair hosted generic generation and check the configured preference-provider path.
-- Complete PostgreSQL restore and pending-allocation continuity checks before Production migration.
-- Complete independent backend Git routing and Production release acceptance.
-- Publish an accepted native CLI Release with platform artifacts, checksums and provenance.
-- Complete physical-wallet and selected iPhone acceptance.
-- Supply verified event, team, demo, video and presentation details for Colosseum.
+Production retains its earlier integration. These milestones do not identify a scheduled release date.
 
-## Subsequent integration work
+## v2.0 — Additional Rails and Operations
 
-Stellar needs its own client, credentials, network, journal and settlement acceptance. Etherfuse and PaySH need verified operation adapters and service-delivery evidence. Hosted agents remain an optional separate system outside the MVP. Mainnet requires explicit release authority, deployment configuration and security acceptance.
+- [ ] Stellar client, credentials, network binding and journal design.
+- [ ] Rail-specific policy enforcement and settlement acceptance.
+- [ ] Etherfuse and PaySH operation adapters.
+- [ ] Paid-service delivery and recovery evidence.
 
-These integrations must preserve exact action binding, owner authority and recovery. Existing generic semantic checks do not imply native on-chain semantic enforcement.
+Generic semantic checks do not establish native on-chain semantic enforcement. Each integration must preserve exact action binding and owner authority.
+
+## v3.0 — Ecosystem
+
+- [ ] Optional hosted-agent integration outside the MVP.
+- [ ] Distributed recovery and journal coordination.
+- [ ] Additional integration patterns selected through explicit product decisions.
+
+These are future directions. No integration, launch date or ecosystem commitment follows from the template's version headings.
