@@ -34,7 +34,7 @@ AllowIt lets the agents that work for you act with the autonomy and resource acc
 
 **Problem:** If you sign each payment, the agent waits for you and the task stalls.
 
-**AllowIt:** You approve the policy once. Inside it, the agent goes ahead. The vault checks the policy and makes the transfer in the same transaction. A transfer above the daily limit fails.
+**AllowIt:** You approve the policy once. Inside it, the agent acts. The vault checks the policy and makes the transfer in the same transaction. A transfer above the daily limit fails.
 
 ### 3. A limit cannot judge intent
 
@@ -73,7 +73,7 @@ See [product](docs/product.md) for users and policy profiles.
 | --- | --- |
 | On-chain programs | Native Rust Solana policy and custody programs, classic SPL Token |
 | SDK / Client | Native Rust policy SDK, separate Solana SDK, native Rust CLI |
-| Frontend | React, Vite, TypeScript, wallet adapter, IndexedDB journal |
+| Frontend | React, Vite, TypeScript, Wallet Standard, IndexedDB journal |
 | Backend | Rust API, engine, storage and integration crates |
 | Hosted transport and storage | Thin TypeScript proxy, Vercel Rust function, PostgreSQL |
 | Testing | SDK/CLI checks, compiled-program tests, browser tests and Testnet receipts |
@@ -91,7 +91,7 @@ flowchart LR
     RPC --> Programs[Shared custody / policy]
 ```
 
-See [architecture](docs/architecture.md) for components, signing, persistence and deployment. Main Preview and Production use this Rust architecture.
+See [architecture](docs/architecture.md) for components, signing, persistence and deployment.
 
 ## Quick Start
 
@@ -111,15 +111,17 @@ Follow [commands and API](docs/api.md) for service configuration and the native 
 
 ## Roadmap
 
-- [x] Native Rust SDK and CLI source ports.
-- [x] Rust backend and thin frontend proxy in main Preview.
+- [x] Native Rust SDK and CLI.
+- [x] Rust backend and thin frontend proxy.
 - [x] Bounded Solana Testnet deployment, funding, spending, revocation and withdrawal.
 - [ ] Hosted generic-provider acceptance.
-- [x] PostgreSQL continuity, independent routing and Rust Production release.
+- [x] PostgreSQL persistence and independent frontend/backend deployments.
 - [ ] Native CLI Release and physical-wallet acceptance.
+- [ ] KASE hackathon prototype: coupons, maturity redemption and holder voting.
+- [ ] Tempo hackathon rail: policy-bound payments and receipt handling.
 - [ ] Additional rails and paid-service delivery.
 
-See the [full roadmap](docs/roadmap.md) and [evidence](https://explorer.solana.com/?cluster=testnet).
+See the [full roadmap](docs/roadmap.md).
 
 ## Resources
 
@@ -128,7 +130,7 @@ See the [full roadmap](docs/roadmap.md) and [evidence](https://explorer.solana.c
 - [SDK](repos/AllowIt-hq--allowit-sdk/README.md) ([GitHub README](https://github.com/AllowIt-hq/allowit-sdk/blob/main/README.md))
 - [CLI](repos/AllowIt-hq--allowit-cli/README.md) ([GitHub README](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md))
 - [Solana Contracts](repos/AllowIt-hq--allowit-contracts-solana/README.md) ([GitHub README](https://github.com/AllowIt-hq/allowit-contracts-solana/blob/main/README.md))
-- [Architecture](docs/architecture.md) and [validation evidence](https://explorer.solana.com/?cluster=testnet)
+- [Architecture](docs/architecture.md)
 
 ## License
 

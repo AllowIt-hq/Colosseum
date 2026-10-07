@@ -2,98 +2,212 @@
 
 ## System Overview
 
-Updated October 7, 2026. This report uses the architecture diagrams authored on October 6 and their latest updates.
+AllowIt places a policy between an AI agent and its owner's funds. The owner sets the terms once. The agent acts inside those terms. When the policy cannot decide, it asks the owner. Dashed links and panels marked Planned show future work. Other diagrams show current paths.
 
-AllowIt separates policy rules, application state, signing and on-chain custody. The native Rust SDK supplies policy and Solana client libraries. The Rust CLI and backend use these libraries directly. The browser reaches the backend through a thin TypeScript proxy. Shared Solana programs enforce the native vault policy and transfer tokens atomically.
+```mermaid
+flowchart LR
+    Owner((Owner)) --> Web[Web app]
+    Web --> Wallet[Owner wallet]
+    Agent((Agent)) --> CLI[Rust CLI]
+    Web --> Proxy[Same-origin proxy]
+    CLI --> Proxy
+    Proxy --> Server[Rust server]
+    Server --> SQL[(SQL database)]
+    Server --> AI[Drafting / oracle APIs]
+    Server --> RPC[Solana RPC]
+    CLI -->|executor spend| RPC
+    RPC --> Programs[(Custody programs)]
+    Server -.-> Rails[Tempo / Stellar]
+```
 
-This condensed view follows the authored Rust-server and deployment diagrams. Solid arrows show current runtime paths. Dashed arrows show future integrations.
+### Why restricted Rust
+
+Restricted Rust is the policy language for these reasons:
+
+1. **One mandate source.** The owner approves one policy source. Shared validation keeps workflow views and backend evaluation consistent. Solana programs enforce the native profile. Additional chain adapters remain planned.
+2. **Bounded validation.** The compiler accepts only a checked subset and rejects arbitrary native code. Execution is deterministic, with bounded size, depth and integer arithmetic.
+3. **Readable policies.** Compiler output drives workflow blocks in the app, with help text for predefined calls. Other code stays visible as custom code.
+4. **Shared libraries.** Policy rules and the Solana client are Rust crates. Planned domain rules will use the same library model. The CLI, backend and contracts reuse these crates.
+5. **Chain targets.** Solana and Stellar programs use Rust. Each target still needs its own output, ABI and runtime binding.
+
+A policy ends in pass or fail. It can request owner input first, but only the trusted oracle engine can wait. In an on-chain profile, that request fails the transaction. Funds never wait inside a contract for a human.
+
+```mermaid
+flowchart LR
+    Src[Restricted Rust]
+    subgraph Shared[Shared compiler]
+        Comp[Compiler] --> IR[Checked IR]
+    end
+    Src --> Comp
+    IR --> Flow[Workflow view]
+    IR --> Oracle[Oracle evaluator]
+    Oracle -->|unclear| Owner((Owner))
+    IR -.-> Adapt[Chain adapters]
+    Adapt -.-> Sbf[Solana artifact]
+    Adapt -.-> Wasm[Stellar artifact]
+    subgraph Current[Current vault]
+        Tmpl[Daily-limit template] --> Prof[Pinned profile]
+        Params[Owner parameters] --> Prof
+    end
+    Prof --> Vault[(Solana vault)]
+```
+
+Restricted Rust provides one mandate source. Compiler emits checked IR for workflow view and oracle evaluator. Each chain needs its own artifact and ABI, so Solana runs pinned daily-limit template with owner parameters, not compiled owner source.
+
+### One backend
+
+The backend is one Rust process built from four crates: API, engine, storage and integrations. It links the policy SDK as a library, so no separate policy-engine service adds a hop, deployment or failure mode. The engine owns lifecycle state and defines ports that storage and integrations implement, so dependencies have no cycle.
+
+The private `allowit-engine` repository holds the backend. A native HTTP binary and a Vercel function share one application library. A deployment uses SQLite with persistent local storage, or PostgreSQL in production, because function-local files are not durable.
 
 ```mermaid
 flowchart TB
-    Owner((Owner)) --> Web[Browser / wallet / journal]
-    Agent((Agent)) --> CLI[Rust CLI / local signer / journal]
-    Web --> Proxy[Thin frontend proxy]
-    CLI -->|HTTP / signed-proof reporting| Proxy
-    Proxy --> Backend[Rust API / lifecycle / adapters]
-    Backend --> SDK[Native policy and Solana SDK libraries]
-    Backend --> SQL[(One selected SQL database)]
-    Backend -->|authoring / preference evidence| Providers[Generation API / Jev]
-    Backend -->|owner submission / reconciliation| RPC[Solana RPC]
-    CLI -->|native SDK / executor submission| RPC
-    RPC --> Chain[(Solana custody / policy / token state)]
-    Backend -.-> Future[Stellar / Etherfuse integration]
+    subgraph Server[One process]
+        Root[Composition root]
+        API[api]
+        subgraph Engine[engine]
+            Core[Lifecycle]
+            Ports[Ports]
+        end
+        Store[storage]
+        IO[integrations]
+    end
+    Proxy[App proxy] -->|HTTP| API
+    Root --> API
+    Root -->|binds| Store
+    Root -->|binds| IO
+    Root -->|links| SDK[Policy SDK]
+    API -->|typed commands| Core
+    Core --> Ports
+    Store -->|implements| Ports
+    IO -->|implements| Ports
+    Core -->|in-process| SDK
+    Store --> DB[(SQLite or PostgreSQL)]
+    IO --> Ext[Provider APIs]
 ```
 
-Each deployment selects one authoritative database adapter. Hosted staging uses PostgreSQL. SQLite requires persistent local storage. FileStore supports local compatibility tests. Database transactions protect request identity, reservations and recovery leases. Provider calls run outside database locks.
+One Rust process links policy SDK in-process, so no engine HTTP hop or extra service. Engine owns lifecycle state and ports. Storage and integrations implement those ports, so dependencies point inward without cycles. Composition root binds one SQL adapter.
 
-The proxy forwards original owner or agent authentication, cookies and request identity. Its service credential grants no owner authority. Only an authenticated owner session can answer owner questions. Agent capabilities grant scoped policy access or reporting. Test mocks grant no live spending authority.
+### Independent frontend
 
-Generic restricted policies can request Jev evidence or owner input. The host binds evidence to the policy revision, exact action and complete bounded context. Caller facts remain claims until authenticated. Jev point scores remain point scores. Numeric limits apply independently. These oracle functions do not extend the native vault kernel's on-chain rules.
+The React and TypeScript frontend lives in the private `app.allowIt.xyz` repository, so it deploys independently of the backend. A thin same-origin proxy forwards versioned requests, cookies and original credentials to one fixed backend. Its service credential grants no owner authority. Validation, decisions and transaction preparation stay in Rust.
 
 ## Components
 
 ### Policy SDK
 
-The [SDK submodule](../repos/AllowIt-hq--allowit-sdk/README.md) ([GitHub README](https://github.com/AllowIt-hq/allowit-sdk/blob/main/README.md)) supplies two separate Rust packages for the native target. The root package compiles restricted Rust, validates typed intermediate representation, evaluates policies and supplies registry, workflow and language-server metadata. It rejects arbitrary native execution. The `native-rust/` package validates Solana releases, prepares transactions, signs locally, validates receipts and maintains an operation journal.
-
-The SDK also retains JavaScript lifecycle references under `native/` and generic IR contract adapters under `contracts/`. Those adapters do not supply the recorded native vault release. Its shared programs come from the separate Solana contracts repository.
+The [SDK](../repos/AllowIt-hq--allowit-sdk/README.md) ([GitHub README](https://github.com/AllowIt-hq/allowit-sdk/blob/main/README.md)) has two Rust packages. The root package holds the compiler, checked IR, interpreter, function registry, workflow projection and language server. The `native-rust` package is the Solana client. It checks releases, prepares and signs transactions and checks receipts. This split keeps the compiler independent of any chain.
 
 ### Native CLI
 
-The [CLI submodule](../repos/AllowIt-hq--allowit-cli/README.md) ([GitHub README](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md)) supplies the agent and owner command surface. HTTP commands use the application API. Native policy commands call the Solana SDK in the same process. The binary needs no Node runtime or backend crate dependency. Reviewed SDK source mirrors keep CLI builds reproducible.
-
-### Rust Backend
-
-The private `allowit-engine` repository contains the application backend under `server/`. Its application library composes four crates: API, engine, storage and integrations. API handles authentication and request translation. Engine owns policies, reservations, revisions, approvals and recovery. Storage implements transactional persistence. Integrations obtain provider and chain evidence through engine-owned interfaces. Native HTTP and Vercel entrypoints use the same application library.
-
-### Frontend and Proxy
-
-The private `app.allowIt.xyz` repository contains the React frontend, wallet adapter, browser journal and `api/proxy.ts`. The proxy transports versioned requests to a fixed backend. Policy validation and transaction preparation use the backend's native SDK. The browser checks signing intent and retains signed proofs locally.
+The [CLI](../repos/AllowIt-hq--allowit-cli/README.md) ([GitHub README](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md)) is one Rust binary for agents and owners. Agent commands (`show`, `eval`, `exec`, `status`) ask the backend to decide. Native `policy` commands run the SDK in-process for generation, signing and RPC. The binary needs no Node runtime and links no backend crate.
 
 ### Solana Programs
 
-The [Solana contracts submodule](../repos/AllowIt-hq--allowit-contracts-solana/README.md) ([GitHub README](https://github.com/AllowIt-hq/allowit-contracts-solana/blob/main/README.md)) supplies the shared policy and custody programs. Contract builds produce Solana executables separately from application builds. The organization also maintains separate website and Stellar contract repositories.
+The [Solana contracts](../repos/AllowIt-hq--allowit-contracts-solana/README.md) ([GitHub README](https://github.com/AllowIt-hq/allowit-contracts-solana/blob/main/README.md)) supply a shared custody program and an immutable policy program. An operator releases these programs once, and each owner creates vault state under that release.
 
-Platform release and owner instance creation are separate operations. The release operator builds shared custody and policy executables, deploys them and verifies finalized identities. Acceptance checks genesis, program IDs, loader linkage, executable hashes and upgrade authority. Source hashes and executable hashes identify different artifacts. The current client requires both pinned programs to be immutable.
+The native profile is a fixed, approved daily-limit template with owner-set parameters, not arbitrary owner Rust. Generic Rust policies run through the backend oracle. The vault binds owner, executor, asset, policy version, daily limit and standing approval. Custody invokes the policy and moves tokens in one atomic transaction, without judging merchant or purpose.
 
-An owner creates vault state under an accepted release. Generation selects a pinned daily-limit template and parameters. It does not compile arbitrary owner Rust or deploy a new executable for each wallet.
+### Owner Feedback Lifecycle
 
 ```mermaid
 flowchart LR
-    Release[Accepted shared program release] --> Instance[Owner-bound vault state]
-    Owner((Owner)) -->|initialize / approve / fund| Instance
-    Executor((Executor)) -->|sign exact spend| Custody[Shared custody program]
-    Instance --> Custody
-    Custody --> Policy[Shared native Rust policy]
-    Policy -->|next spend| Custody
-    Custody -->|atomic commit| State[(SPL transfer / counters / nonce)]
-    State --> Receipt[Finalized receipt]
+    Intent[Owner intent] --> Draft[Rust draft]
+    Draft --> Review[Owner review]
+    Review -->|approve| Active[Active revision]
+    Active --> Eval{Evaluate request}
+    Eval -->|pass| Act[Agent acts]
+    Eval -->|fail| Deny[Denied]
+    Eval -->|unclear| Ask[Ask owner]
+    Ask -->|answer| Eval
+    Active -->|feedback| Draft
 ```
 
-Vault state binds owner, executor, mint, policy identity, daily limit, approval, nonce and revision. Deployment initializes and approves the instance. Funding is a separate owner operation. The executor signs later transfers under standing approval.
+The backend drafts restricted Rust from owner intent and checks it with the real compiler. The owner revises through dialogue and approves one revision. An owner answer settles one unclear request. Feedback creates a new revision for review, so AllowIt never changes a policy silently.
 
-The pinned policy calls `require_approval` and `enforce_daily_limit`. System functions check UTC daily rollover, clock validity, arithmetic and the compiled ceiling. Amounts use six-decimal units. The owner can tune the daily limit from zero to 50 tokens. Zero pauses spending. Funding and tuning preserve counters. A policy switch clears approval.
+### Wallets and Signing
 
-Custody checks executor identity, approval, asset, nonce, revision and policy artifact before invocation. It commits the returned daily spend and SPL transfer together. The native kernel permits recipients within its daily cap. It does not enforce merchant identity, task purpose or semantic preferences. Each vault has its own budget. The separate allowance profile requires an owner signature for each spend.
+```mermaid
+flowchart LR
+    Owner((Owner)) --> BW[Wallet Standard wallet]
+    Owner --> OK[Owner keyfile]
+    Agent((Agent)) --> EK[Executor keyfile]
+    Server[Rust server] -->|prepares| BW
+    BW -->|owner ops| Vault[(Vault)]
+    OK -->|owner ops| Vault
+    EK -->|bounded spend| Vault
+    Agent -.-> TS[Tempo signer]
+```
 
-### Signing, Recovery and Deployment
+The browser accepts any Wallet Standard wallet that can connect and sign messages and legacy transactions on Solana Testnet. Sign-in uses a signed message, and owner operations use signed transactions. The app suggests Phantom or Solflare.
 
-Owner keys stay in the wallet or owner-controlled CLI files. Executor keys remain separate. Backend preparation grants no signing authority. SKILL.md describes permitted commands. An exported executor bundle can contain a private audit capability and must remain private.
+Owner and agent use separate CLI keyfiles. The executor keyfile can only spend within standing approval. The backend prepares transactions but holds no signing key. AllowIt has no Stellar wallet support, and Tempo needs its own signing adapter.
 
-The browser and CLI persist exact signed bytes before submission. The backend saves browser proofs in SQL before broadcasting. An executor bundle with an audit capability requires durable SQL acknowledgement before CLI broadcast. Standalone CLI execution uses its local journal and RPC. The audit acknowledgement is cooperative client behavior. The backend independently reconciles receipts and vault nonces. Recovery retains the original request and signed identity. Finalized receipts must match the expected message, program invocations and token changes.
+### Packaging and Platforms
 
-A lost response leaves an uncertain operation. Status reconciles that operation without signing a replacement. Method-specific expiry evidence can establish non-execution. Uncertain funding or withdrawal can require another explicitly authorized owner operation.
+```mermaid
+flowchart LR
+    SDK[Rust SDK] --> Tools[Compiler / LSP]
+    SDK --> CLI[CLI binary]
+    SDK --> Server[Rust server]
+    CLI --> Linux[Linux x64 musl]
+    CLI --> Mac[macOS arm64 / x64]
+    CLI -.-> Win[Windows]
+    Server --> Fn[Vercel function]
+    App[Web app] --> Bundle[Bundle / proxy]
+    Contracts[Solana programs] --> SBF[Program release]
+```
 
-Frontend and Rust backend releases remain independent. Main Preview and Production use the proxy and Rust backend. Native Git routes the frontend and backend independently. Contract release changes require compatible SDK and backend pins.
+The CLI ships as one `allowit` binary per platform. Workflow builds cover Linux x64, macOS Apple Silicon and macOS Intel. Windows and tagged native CLI releases remain planned. The Linux musl build avoids dynamic runtime dependencies. The backend runs as a Vercel function, native binary or container, and the frontend has its own Vercel project. The SDK pins accepted Solana program identities.
 
-The bounded Rust Testnet lifecycle passed deploy, fund, executor spend, revoke, withdrawal and recovery checks. Stellar, Etherfuse, PaySH payment delivery and hosted-agent execution remain outside this MVP. Lean checks run offline against specific pinned models. Their theorem scope covers the pinned models.
+### Hackathon Rails: KASE and Tempo
 
-See [commands](api.md) for operational use.
+```mermaid
+flowchart TB
+    Server[Rust server] --> Sol[Solana rail]
+    Server -.-> Tempo[Tempo rail]
+    Sol --> Gate[Custody gate]
+    Gate --> Daily[Daily-limit policy]
+    Gate -.-> KASE[KASE actions]
+```
+
+KASE and Tempo are hackathon targets, not shipped features.
+
+**KASE corporate actions.** No verified KASE vendor interface is specified, so the domain is `corporate_actions`. It covers coupons, maturity redemption and advisory holder votes. The prototype will custody holder positions and seal immutable record snapshots. A typed ABI will derive each payment and burn with exact integer arithmetic.
+
+**Shared modules.** The `allowit` base library checks binding, approval, replay, budget and exact effects. It will link into the custody gate, avoiding a separate deployment and cross-program call. Every gate path must run these checks. An independent `corporate_actions` verifier will run as an immutable module on approved typed paths. Only the gate commits token effects, and SDK checks cannot replace it.
+
+The planned registry reserves the `allowit`, `solana` and `corporate_actions` namespaces. Later vendor modules, such as `etherfuse`, will each get a unique prefix. Each module will deploy only on supported rails.
+
+```mermaid
+flowchart LR
+    Caller((Caller)) --> Base
+    subgraph Gate[Planned custody gate]
+        Base[allowit checks] --> Domain[Domain check]
+        Domain --> Vendor[Vendor check]
+        Vendor --> Policy[Policy check]
+        Policy --> Commit[Atomic commit]
+    end
+    CA[corporate_actions] -.->|verifier| Domain
+    EF[etherfuse] -.->|later support| Vendor
+    Commit --> Vault[(Vault tokens)]
+    Caller --x|no bypass| Vault
+
+```
+
+Planned gate links allowit base checks, avoiding a separate deployment and CPI hop. Immutable corporate_actions and vendor verifiers, where supported, stay read-only. Generated policy only adds restrictions. Gate alone commits token effects atomically, so direct calls cannot bypass checks.
+
+**Tempo rail.** The work adds a rail adapter that binds network, asset, fees and signer, plus receipt handling and compatible policy enforcement. Each rail needs a proven Rust target or an enforcement adapter.
 
 ## Authority Comparison
 
+AllowIt keeps custody, owner keys, agent keys and semantic judgement apart. The native kernel never consults a model.
+
 | Profile | Who authorizes a spend? | Enforcement |
 | --- | --- | --- |
-| Native vault | Owner grants standing approval. Designated executor signs each spend. | Shared Solana policy and custody enforce asset, daily cap, nonce and revision. |
-| Allowance | Owner signs each exact transfer. | Backend evaluates policy and checks finalized transfer effects. |
-| Executor audit capability | Executor reports signed proofs. It gains no owner authority. | CLI waits for SQL acknowledgement. Backend independently reconciles receipts and nonces. |
+| Native vault | Owner grants standing approval. Executor signs each spend. | Custody and policy programs enforce asset, daily limit and approval. |
+| Allowance | Owner signs each exact transfer. | Backend evaluates policy and checks finalized effects. |
+| Generic policy | Backend, with rules, oracle evidence and owner answers. | Backend. On-chain profiles fail on owner input. |
+| Corporate actions (planned) | Owner approves a servicing executor. Holders sign votes. | Custody gate with `allowit` base and `corporate_actions` verifier. |
+
+See [commands](api.md) for operational use.

@@ -29,6 +29,8 @@ Check template order, relative links, exact team roles and the diff before commi
 
 ## Technical writing
 
+Do not add update announcements, writing history or maintenance dates to reports. Keep diagram labels terse. Do not use “the” in diagrams. Use Claude Opus 5.5 for architecture and product rewrites. Read owner communications, sources and artifacts for decisions and rationale. KASE and Tempo belong in hackathon scope.
+
 Always use the [asd-ste100 skill](https://github.com/ackrate/ackrate-project/blob/main/.agents/skills/asd-ste100/SKILL.md) for technical writing. Use short sentences, active voice and consistent terms. Preserve facts, conditions, uncertainty and scope.
 
 Write reports for humans. Keep each section concise. Describe existing implementation or specific planned behavior and data. Remove filler labels, generic disclaimers, excuses, repeated context and irrelevant links. Keep qualifications that define actual implementation limits. Omit “public” from repository link labels.
