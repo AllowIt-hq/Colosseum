@@ -1,6 +1,12 @@
+## Document purposes
+
+Architecture documents describe system design, component boundaries and technical decisions. Product documents describe users, behavior and requirements. Roadmaps contain delivery status: shipped, in progress, planned and acceptance pending.
+
+Do not repeat delivery status in architecture or product prose, tables or diagrams. Remove disclaimers such as “targets, not shipped features”, “not implemented yet” and “outside this release”. Keep actual behavioral constraints as direct design facts. Describe approved design without claiming deployment. Do not add update announcements or writing history.
+
 # Human-facing report policy
 
-Keep all evidence and validation records in private project run artifacts. Do not add evidence pages or sections to reports unless the owner explicitly requests them. Do not publish provider errors, HTTP failures, retries or temporary service conditions. Permanent reports contain implementation facts and the latest relevant completed execution. Remove generic disclaimers and debugging commentary. Do not link private project records from public reports.
+Keep all evidence and validation records in private project run artifacts. Do not add evidence pages or sections to reports unless the owner explicitly requests them. Do not publish provider errors, HTTP failures, retries or temporary service conditions. Permanent reports describe design, behavior and technical decisions. Remove generic disclaimers and debugging commentary. Do not link private project records from public reports.
 
 # Colosseum report instructions
 
@@ -23,7 +29,7 @@ Preserve these names and role strings. Max's GitHub account is [mks044](https://
 
 ## Source and validation
 
-Source dependencies are pinned in [repos/](repos/README.md). Update source inside its own repository before changing a gitlink. Preserve current implementation, recorded evidence and planned work as separate states.
+Source dependencies are pinned in [repos/](repos/README.md). Update source inside its own repository before changing a gitlink. Track shipped and unfinished work in [Roadmap](docs/roadmap.md).
 
 Check template order, relative links, exact team roles and the diff before committing. Keep credentials and private signing material out of reports. Documentation changes do not deploy applications.
 

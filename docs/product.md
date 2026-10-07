@@ -24,7 +24,7 @@ Agents now buy data, tools and services to finish real work. Owners have two poo
 - **Wallet owners:** fund a bounded vault and keep pause, revocation and withdrawal controls.
 - **Agent builders:** give an agent one CLI and a scoped skill instead of a wallet key.
 - **Application developers:** build on the Rust SDK and backend APIs.
-- **Bond issuers and servicers:** automate coupons, redemption and holder votes under policy. This is hackathon scope.
+- **Bond issuers and servicers:** automate coupons, redemption and holder votes under policy.
 
 ### User journeys
 
@@ -51,17 +51,17 @@ Native vault setup:
 
 ### Requirements
 
-| ID | Planned | State |
-| --- | --- | --- |
-| FR-1 | Draft a policy from plain language and show it as readable steps. | Implemented, hosted provider acceptance pending |
-| FR-2 | Revise and approve policies as explicit revisions. | Current |
-| FR-3 | Ask the owner about unclear generic requests. The agent waits for the answer. | Current |
-| FR-4 | Enforce a native daily-limit vault with standing approval. | Current, Solana Testnet |
-| FR-5 | Let native vault owners pause, tune, revoke and withdraw. | Current |
-| FR-6 | Give agents one CLI with no access to owner keys. | Current |
-| FR-7 | Service KASE corporate actions: coupons, maturity redemption and advisory votes. | Hackathon |
-| FR-8 | Pay on the Tempo rail under owner policy. | Hackathon |
-| FR-9 | Let agents delegate to sub-agents within the owner's terms. | Planned |
+| ID | Requirement |
+| --- | --- |
+| FR-1 | Draft a policy from plain language and show it as readable steps. |
+| FR-2 | Revise and approve policies as explicit revisions. |
+| FR-3 | Ask the owner about unclear generic requests. The agent waits for the answer. |
+| FR-4 | Enforce a native daily-limit vault with standing approval. |
+| FR-5 | Let native vault owners pause, tune, revoke and withdraw. |
+| FR-6 | Give agents one CLI with no access to owner keys. |
+| FR-7 | Service KASE corporate actions: coupons, maturity redemption and advisory votes. |
+| FR-8 | Pay on the Tempo rail under owner policy. |
+| FR-9 | Let agents delegate to sub-agents within the owner's terms. |
 
 ### Operational requirements
 
@@ -72,7 +72,7 @@ Native vault setup:
 
 ### Scope
 
-Current operation uses Solana Testnet and test tokens. The hackathon release targets KASE corporate actions on Solana Devnet and a Tempo rail. The KASE prototype uses a test bond and test settlement tokens. It will snapshot holders at each record date, pay exact entitlements and record an advisory vote. Tempo adds network, asset, fee and signing binding with verified receipts. See the [roadmap](roadmap.md).
+The native vault profile uses Solana Testnet and test tokens. The KASE demonstration uses Solana Devnet, a test bond and test settlement tokens. Corporate actions snapshot holders at each record date, pay exact entitlements and record advisory votes. Tempo payments bind network, asset, fees and signer, with verified receipts. See the [roadmap](roadmap.md) for delivery status.
 
 ### Success criteria
 
@@ -94,6 +94,6 @@ Current operation uses Solana Testnet and test tokens. The hackathon release tar
 
 ### Boundaries
 
-The native vault enforces asset, approval and daily limit. It does not judge recipient, merchant or purpose. Preference judgement runs in the backend, not on chain. The KASE prototype issues no real securities and does not settle through KASE. Hosted agents are outside this release.
+The native vault enforces asset, approval and daily limit. The backend evaluates preferences and routes unclear requests to the owner.
 
 [Architecture](architecture.md) · [Roadmap](roadmap.md)

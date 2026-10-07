@@ -2,7 +2,7 @@
 
 ## System Overview
 
-AllowIt places a policy between an AI agent and its owner's funds. The owner sets the terms once. The agent acts inside those terms. When the policy cannot decide, it asks the owner. Dashed links and panels marked Planned show future work. Other diagrams show current paths.
+AllowIt places a policy between an AI agent and its owner's funds. The owner sets the terms once. The agent acts inside those terms. When the policy cannot decide, it asks the owner.
 
 ```mermaid
 flowchart LR
@@ -17,17 +17,17 @@ flowchart LR
     Server --> RPC[Solana RPC]
     CLI -->|executor spend| RPC
     RPC --> Programs[(Custody programs)]
-    Server -.-> Rails[Tempo / Stellar]
+    Server --> Rails[Tempo / Stellar]
 ```
 
 ### Why restricted Rust
 
 Restricted Rust is the policy language for these reasons:
 
-1. **One mandate source.** The owner approves one policy source. Shared validation keeps workflow views and backend evaluation consistent. Solana programs enforce the native profile. Additional chain adapters remain planned.
+1. **One mandate source.** The owner approves one policy source. Shared validation keeps workflow views and backend evaluation consistent. Solana programs enforce the native profile.
 2. **Bounded validation.** The compiler accepts only a checked subset and rejects arbitrary native code. Execution is deterministic, with bounded size, depth and integer arithmetic.
 3. **Readable policies.** Compiler output drives workflow blocks in the app, with help text for predefined calls. Other code stays visible as custom code.
-4. **Shared libraries.** Policy rules and the Solana client are Rust crates. Planned domain rules will use the same library model. The CLI, backend and contracts reuse these crates.
+4. **Shared libraries.** Policy rules and the Solana client are Rust crates. Domain modules use the same library model. The CLI, backend and contracts reuse these crates.
 5. **Chain targets.** Solana and Stellar programs use Rust. Each target still needs its own output, ABI and runtime binding.
 
 A policy ends in pass or fail. It can request owner input first, but only the trusted oracle engine can wait. In an on-chain profile, that request fails the transaction. Funds never wait inside a contract for a human.
@@ -42,10 +42,10 @@ flowchart LR
     IR --> Flow[Workflow view]
     IR --> Oracle[Oracle evaluator]
     Oracle -->|unclear| Owner((Owner))
-    IR -.-> Adapt[Chain adapters]
-    Adapt -.-> Sbf[Solana artifact]
-    Adapt -.-> Wasm[Stellar artifact]
-    subgraph Current[Current vault]
+    IR --> Adapt[Chain adapters]
+    Adapt --> Sbf[Solana artifact]
+    Adapt --> Wasm[Stellar artifact]
+    subgraph Native[Native vault]
         Tmpl[Daily-limit template] --> Prof[Pinned profile]
         Params[Owner parameters] --> Prof
     end
@@ -136,12 +136,12 @@ flowchart LR
     BW -->|owner ops| Vault[(Vault)]
     OK -->|owner ops| Vault
     EK -->|bounded spend| Vault
-    Agent -.-> TS[Tempo signer]
+    Agent --> TS[Tempo signer]
 ```
 
 The browser accepts any Wallet Standard wallet that can connect and sign messages and legacy transactions on Solana Testnet. Sign-in uses a signed message, and owner operations use signed transactions. The app suggests Phantom or Solflare.
 
-Owner and agent use separate CLI keyfiles. The executor keyfile can only spend within standing approval. The backend prepares transactions but holds no signing key. AllowIt has no Stellar wallet support, and Tempo needs its own signing adapter.
+Owner and agent use separate CLI keyfiles. The executor keyfile can only spend within standing approval. The backend prepares transactions but holds no signing key. Each rail has its own signing adapter.
 
 ### Packaging and Platforms
 
@@ -152,52 +152,50 @@ flowchart LR
     SDK --> Server[Rust server]
     CLI --> Linux[Linux x64 musl]
     CLI --> Mac[macOS arm64 / x64]
-    CLI -.-> Win[Windows]
+    CLI --> Win[Windows]
     Server --> Fn[Vercel function]
     App[Web app] --> Bundle[Bundle / proxy]
     Contracts[Solana programs] --> SBF[Program release]
 ```
 
-The CLI ships as one `allowit` binary per platform. Workflow builds cover Linux x64, macOS Apple Silicon and macOS Intel. Windows and tagged native CLI releases remain planned. The Linux musl build avoids dynamic runtime dependencies. The backend runs as a Vercel function, native binary or container, and the frontend has its own Vercel project. The SDK pins accepted Solana program identities.
+The CLI packages one `allowit` binary per platform. Platform targets are Linux x64, macOS Apple Silicon, macOS Intel and Windows. The Linux musl build avoids dynamic runtime dependencies. The backend runs as a Vercel function, native binary or container, and the frontend has its own Vercel project. The SDK pins accepted Solana program identities.
 
-### Hackathon Rails: KASE and Tempo
+### Corporate Actions and Rails
 
 ```mermaid
 flowchart TB
     Server[Rust server] --> Sol[Solana rail]
-    Server -.-> Tempo[Tempo rail]
+    Server --> Tempo[Tempo rail]
     Sol --> Gate[Custody gate]
     Gate --> Daily[Daily-limit policy]
-    Gate -.-> KASE[KASE actions]
+    Gate --> KASE[KASE actions]
 ```
 
-KASE and Tempo are hackathon targets, not shipped features.
+**KASE corporate actions.** The `corporate_actions` domain covers coupons, maturity redemption and advisory holder votes. Holder positions stay in program custody. Each record date seals an immutable snapshot. A typed ABI derives each payment and burn with exact integer arithmetic.
 
-**KASE corporate actions.** No verified KASE vendor interface is specified, so the domain is `corporate_actions`. It covers coupons, maturity redemption and advisory holder votes. The prototype will custody holder positions and seal immutable record snapshots. A typed ABI will derive each payment and burn with exact integer arithmetic.
+**Shared modules.** The `allowit` base library checks binding, approval, replay, budget and exact effects. It links into the custody gate, avoiding a separate deployment and cross-program call. Every gate path must run these checks. An independent `corporate_actions` verifier runs as an immutable module on approved typed paths. Only the gate commits token effects, and SDK checks cannot replace it.
 
-**Shared modules.** The `allowit` base library checks binding, approval, replay, budget and exact effects. It will link into the custody gate, avoiding a separate deployment and cross-program call. Every gate path must run these checks. An independent `corporate_actions` verifier will run as an immutable module on approved typed paths. Only the gate commits token effects, and SDK checks cannot replace it.
-
-The planned registry reserves the `allowit`, `solana` and `corporate_actions` namespaces. Later vendor modules, such as `etherfuse`, will each get a unique prefix. Each module will deploy only on supported rails.
+The registry reserves the `allowit`, `solana` and `corporate_actions` namespaces. Vendor modules, such as `etherfuse`, each get a unique prefix. Each module has deployment bindings for its supported rails.
 
 ```mermaid
 flowchart LR
     Caller((Caller)) --> Base
-    subgraph Gate[Planned custody gate]
+    subgraph Gate[Custody gate]
         Base[allowit checks] --> Domain[Domain check]
         Domain --> Vendor[Vendor check]
         Vendor --> Policy[Policy check]
         Policy --> Commit[Atomic commit]
     end
-    CA[corporate_actions] -.->|verifier| Domain
-    EF[etherfuse] -.->|later support| Vendor
+    CA[corporate_actions] -->|verifier| Domain
+    EF[etherfuse] -->|vendor verifier| Vendor
     Commit --> Vault[(Vault tokens)]
     Caller --x|no bypass| Vault
 
 ```
 
-Planned gate links allowit base checks, avoiding a separate deployment and CPI hop. Immutable corporate_actions and vendor verifiers, where supported, stay read-only. Generated policy only adds restrictions. Gate alone commits token effects atomically, so direct calls cannot bypass checks.
+Custody gate links allowit base checks, avoiding a separate deployment and CPI hop. Immutable corporate_actions and vendor verifiers, where supported, stay read-only. Generated policy only adds restrictions. Gate alone commits token effects atomically, so direct calls cannot bypass checks.
 
-**Tempo rail.** The work adds a rail adapter that binds network, asset, fees and signer, plus receipt handling and compatible policy enforcement. Each rail needs a proven Rust target or an enforcement adapter.
+**Tempo rail.** The rail adapter binds network, asset, fees and signer. It handles receipts and maps policy enforcement to rail capabilities. Each rail needs a proven Rust target or an enforcement adapter.
 
 ## Authority Comparison
 
@@ -208,6 +206,6 @@ AllowIt keeps custody, owner keys, agent keys and semantic judgement apart. The 
 | Native vault | Owner grants standing approval. Executor signs each spend. | Custody and policy programs enforce asset, daily limit and approval. |
 | Allowance | Owner signs each exact transfer. | Backend evaluates policy and checks finalized effects. |
 | Generic policy | Backend, with rules, oracle evidence and owner answers. | Backend. On-chain profiles fail on owner input. |
-| Corporate actions (planned) | Owner approves a servicing executor. Holders sign votes. | Custody gate with `allowit` base and `corporate_actions` verifier. |
+| Corporate actions | Owner approves a servicing executor. Holders sign votes. | Custody gate with `allowit` base and `corporate_actions` verifier. |
 
 See [commands](api.md) for operational use.
