@@ -2,9 +2,9 @@
 
 ## What is AllowIt?
 
-AllowIt provides owner-approved spending controls for agents. The native Rust SDK and backend validate policy requests. Shared Solana programs enforce the native vault policy. The owner retains signing and recovery controls.
+You give an agent a job and a policy for the money it can use. AllowIt checks its requests against that policy. Generic policies can ask you to decide unclear requests. You can revoke spending authority.
 
-The native kernel binds approval, executor, asset, daily spending, nonce and revision. Generic restricted policies can also request semantic evidence or owner input through the backend. Those functions do not extend the native kernel's on-chain rules.
+The native Solana vault uses standing approval and a daily spending limit. Its Rust SDK and backend handle policy requests, signing and recovery. Generic policies can request semantic evidence or owner input through the backend. The native kernel enforces approval, executor, asset, daily spending, nonce and revision.
 
 ## Target Users
 
@@ -14,10 +14,10 @@ The native kernel binds approval, executor, asset, daily spending, nonce and rev
 
 ## Core Value Propositions
 
-1. **Bounded authority:** the designated executor spends within the approved native policy.
-2. **Separate signing:** the owner keeps the owner key. The executor uses its own key.
-3. **Reviewed policy behavior:** source, executable identity and actual enforcement remain explicit.
-4. **Recoverable operations:** signed proofs preserve original identity through lost responses and reconciliation.
+1. **You set the policy:** approve the executor and daily limit for the native vault.
+2. **The agent can continue:** standing approval permits transfers that pass the native policy.
+3. **You keep control:** retain the owner key and pause, revocation and withdrawal controls.
+4. **You can check what happened:** receipts and signed proofs support recovery after lost responses.
 
 An owner inspects the policy, signs initialization and standing approval, then funds the vault separately. The executor receives its skill and private configuration. The owner can inspect receipts, tune the limit, pause, revoke or withdraw.
 

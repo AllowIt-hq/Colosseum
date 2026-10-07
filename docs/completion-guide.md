@@ -4,10 +4,10 @@ Follow the [original template](https://github.com/Marakaya/colosseum_example/tre
 
 | Template section | How to fill it |
 | --- | --- |
-| Title, description, badges | Identify AllowIt and bounded agent spending. Link only real licenses, networks and validation. |
+| Title, description, badges | Use the slogan and product narrative from [allowit.xyz](https://allowit.xyz). Link only real licenses, networks and validation. |
 | Demo links and image | Supply the configured demo, video and current application image. |
 | Hackathon and team | Supply the confirmed event, submission page, team roles and contacts. |
-| Problem and Solution | Describe excessive authority, repeated signing, policy boundaries and uncertain submission. |
+| Problem and Solution | Explain how you set the policy, let the agent work, decide unclear requests and retain control. |
 | Why Solana | Explain owner-bound accounts, shared programs, atomic accounting and finalized effects. |
 | Summary of Features | Describe native Rust SDK/CLI, Rust backend, frontend proxy, policy lifecycle and recovery. |
 | Tech Stack | List the actual Rust, React/Vite/TypeScript, wallet, SQL and Solana components. |

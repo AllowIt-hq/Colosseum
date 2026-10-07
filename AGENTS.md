@@ -28,3 +28,9 @@ Check template order, relative links, exact team roles and the diff before commi
 Always use the [asd-ste100 skill](https://github.com/ackrate/ackrate-project/blob/main/.agents/skills/asd-ste100/SKILL.md) for technical writing. Use short sentences, active voice and consistent terms. Preserve facts, conditions, uncertainty and scope.
 
 Write reports for humans. Keep each section concise. Describe existing implementation or specific planned behavior and data. Remove filler labels, generic disclaimers, excuses, repeated context and irrelevant links. Keep qualifications that define actual implementation limits. Omit “public” from repository link labels.
+
+## Official voice
+
+Use [allowit.xyz](https://allowit.xyz) as the source for the slogan and product narrative. Preserve the slogan: `Go on. On your terms.` Preserve the hero description: `AllowIt lets your AI agents spend and invest, within a policy you set.` Do not invent slogans.
+
+Start with the owner's job and policy. Explain how the agent acts within the policy, asks about unclear requests and stops when the owner revokes authority. Keep website examples distinct from implemented features. Apply STE100 to technical explanations. Preserve official brand copy.
