@@ -22,29 +22,31 @@
 
 ## Problem and Solution
 
-### 1. Give the agent a policy
+People already hand AI agents real work. They do not yet hand them the money. AllowIt connects the two with a policy. The agent acts inside the policy, asks you when a request is unclear and stops at the boundary.
 
-**Problem:** An agent needs money to finish a job. A wallet key gives it more authority than the job requires.
+### 1. A wallet key gives too much authority
 
-**AllowIt:** You approve a policy. The native vault gives a separate executor spending authority within a daily limit. You keep your owner key.
+**Problem:** An agent needs payment authority to finish work that requires paid tools or data. A wallet key lets it spend everything the wallet holds, on anything.
 
-### 2. Let it work within the policy
+**AllowIt:** You give the agent a policy, not your key. On Solana, the native vault gives a designated executor spending authority. It binds that authority to one asset and a daily limit. Your owner key stays with you.
 
-**Problem:** Signing each payment interrupts the agent's work.
+### 2. Approving every payment stops the work
 
-**AllowIt:** Standing approval lets the executor spend within the native policy. Solana checks the policy and transfer in one transaction.
+**Problem:** If you sign each payment, the agent waits for you and the task stalls.
 
-### 3. Keep the judgement calls
+**AllowIt:** You approve the policy once. Inside it, the agent goes ahead. The vault checks the policy and makes the transfer in the same transaction. A transfer above the daily limit fails.
 
-**Problem:** A numeric limit cannot decide whether a purchase fits your intent.
+### 3. A limit cannot judge intent
 
-**AllowIt:** Generic policies can request semantic evidence or ask you to decide. The native vault enforces approval and daily spending limits.
+**Problem:** A spending limit says how much. It cannot say whether a purchase serves the job you described.
 
-### 4. Keep control of the money
+**AllowIt:** The backend can evaluate generic restricted policies with semantic evidence tied to the exact request. It sends unclear requests to you. The native vault checks executor identity, standing approval, asset, daily limit, nonce and policy revision.
 
-**Problem:** You need to stop spending and recover funds when the job changes.
+### 4. Plans change
 
-**AllowIt:** You can pause, revoke or withdraw. Signed journals and finalized receipts let the client recover an operation after a lost response.
+**Problem:** When the job ends or goes wrong, you must stop the agent, get the funds back and know what already happened.
+
+**AllowIt:** You can pause the vault, tune the limit, revoke the approval or withdraw the funds. Signed journals and finalized receipts show what each operation did. The client uses them to recover an operation after a lost response.
 
 ## Why Solana
 

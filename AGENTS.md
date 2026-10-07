@@ -33,4 +33,4 @@ Write reports for humans. Keep each section concise. Describe existing implement
 
 Use [allowit.xyz](https://allowit.xyz) as the source for the slogan and product narrative. Preserve the slogan: `Go on. On your terms.` Preserve the hero description: `AllowIt lets your AI agents spend and invest, within a policy you set.` Do not invent slogans.
 
-Start with the owner's job and policy. Explain how the agent acts within the policy, asks about unclear requests and stops when the owner revokes authority. Keep website examples distinct from implemented features. Apply STE100 to technical explanations. Preserve official brand copy.
+Start with the owner's job and policy. Explain how the agent acts within the policy, asks about unclear requests and stops when the owner revokes authority. Keep website examples distinct from implemented features. Use Claude Opus 5.5 for creative writing, including Problem and Solution and product narratives. Check the returned model before accepting its text. Apply STE100 to technical explanations. Preserve official brand copy.
