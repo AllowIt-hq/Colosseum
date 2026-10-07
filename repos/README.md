@@ -1,6 +1,6 @@
-# Public repositories
+# Repositories
 
-The organization has four public repositories on October 7, 2026: Colosseum, the SDK, the CLI and Solana contracts. Colosseum is this repository. The other three are pinned submodules.
+The SDK, CLI and Solana contracts are pinned submodules.
 
 ## [AllowIt SDK](AllowIt-hq--allowit-sdk/)
 
@@ -29,6 +29,6 @@ git submodule update --init --recursive
 git submodule status --recursive
 ```
 
-Update gitlinks only after reviewing compatible revisions. Source changes belong in the child repository. This report does not change child source.
+Update gitlinks only after reviewing compatible revisions. Source changes belong in the child repository.
 
-The backend, application, website and Stellar contract repositories are private. They remain separate architecture components. No private repository is included here.
+The backend, application, website and Stellar contract repositories are private. They remain separate architecture components.

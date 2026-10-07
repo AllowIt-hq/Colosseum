@@ -15,10 +15,16 @@ Max: `BD, marketing and operations`.
 Igor Stolyarov: `software engineering (front-end)`.
 Mukhammedali Beriktassuly: `software engineering (smart contracts)`.
 
-Preserve these names and role strings. Max's public GitHub account is [mks044](https://github.com/mks044).
+Preserve these names and role strings. Max's GitHub account is [mks044](https://github.com/mks044).
 
 ## Source and validation
 
-Public source dependencies are pinned in [repos/](repos/README.md). Update source inside its own repository before changing a gitlink. Preserve current implementation, recorded evidence and planned work as separate states.
+Source dependencies are pinned in [repos/](repos/README.md). Update source inside its own repository before changing a gitlink. Preserve current implementation, recorded evidence and planned work as separate states.
 
 Check template order, relative links, exact team roles and the diff before committing. Keep credentials and private signing material out of reports. Documentation changes do not deploy applications.
+
+## Technical writing
+
+Always use the [asd-ste100 skill](https://github.com/ackrate/ackrate-project/blob/main/.agents/skills/asd-ste100/SKILL.md) for technical writing. Use short sentences, active voice and consistent terms. Preserve facts, conditions, uncertainty and scope.
+
+Write reports for humans. Keep each section concise. Describe existing implementation or specific planned behavior and data. Remove filler labels, generic disclaimers, excuses, repeated context and irrelevant links. Keep qualifications that define actual implementation limits. Omit “public” from repository link labels.
