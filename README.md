@@ -1,77 +1,132 @@
-# AllowIt
+# AllowIt — Policy-Controlled Agent Spending
 
-Owner-approved, policy-bound vaults for agent spending on Solana. The owner funds a vault and grants standing approval; a designated executor can transfer the bound token only within the on-chain daily limit.
+[![License: MIT](https://img.shields.io/badge/License-MIT-14F195.svg)](LICENSE)
+[![Solana Testnet](https://img.shields.io/badge/Solana-Testnet-9945FF)](docs/evidence.md)
 
-[App](https://app.allowit.xyz) · [Architecture](docs/architecture.md) · [Recorded Testnet evidence](docs/evidence.md) · [Completion guide](docs/completion-guide.md)
+> AllowIt gives agents bounded spending authority through owner-approved policies, a native Rust SDK and Solana vaults.
 
-## Colosseum submission
+[Live Application](https://app.allowit.xyz) · [Architecture](docs/architecture.md) · [Repositories](repos/README.md)
 
-Draft. Event name and submission URL: **TODO — confirm the registered event and project page.**
+Video walkthrough and submission links: pending. Demo image: pending. The live application entrypoint does not identify the reviewed Rust Preview.
 
-| Team member | Role | Public contact |
+## Submission to Colosseum
+
+Registered event and public submission page: pending confirmation.
+
+| Name | Role | Contact |
 | --- | --- | --- |
-| TODO | TODO | TODO |
+| Pending | Pending | Pending |
 
 ## Problem and Solution
 
-Agents need spending authority to complete tasks. Repeated owner signatures interrupt execution, while unrestricted signing access gives the agent more authority than the task requires.
+### 1. Excessive Agent Authority
 
-AllowIt places funds in a policy-bound vault. The owner approves the vault once, selects a daily limit and designates an executor. Each spend invokes the approved native Rust policy; custody checks approval, executor identity, asset, nonce, revision and limits before transferring tokens. The owner can pause, revoke and withdraw.
+**Problem:** An unrestricted signer can exceed the owner's intended spending authority.
+
+**AllowIt:** A separate executor signs bounded vault spending. The owner retains approval, revocation and withdrawal authority.
+
+### 2. Repeated Owner Signing
+
+**Problem:** Approval of each transfer interrupts unattended execution.
+
+**AllowIt:** The native vault uses standing owner approval and a chain-enforced daily limit.
+
+### 3. Unclear Policy Boundaries
+
+**Problem:** A policy description can promise checks that the actual payment path does not enforce.
+
+**AllowIt:** The SDK validates restricted Rust. The native kernel exposes its pinned approval and daily-limit rules. Generic semantic evaluation remains separate.
+
+### 4. Uncertain Submission
+
+**Problem:** A lost response can cause an agent to submit another spend.
+
+**AllowIt:** Signed journals preserve the original identity. Recovery checks finalized effects before recording settlement.
 
 ## Why Solana
 
-Program-derived vault accounts separate custody from the executor's signing key. A native policy invocation and SPL Token transfer share one transaction, so spending counters and token movement commit together. Finalized transaction receipts expose the policy invocation and exact token changes.
+- Program-derived accounts bind vault state to the owner, executor and accepted policy release.
+- Native policy invocation and SPL transfer share a transaction with atomic accounting.
+- Finalized receipts expose exact program and token effects.
+- Shared programs support separate owner instances without deploying an executable for every wallet.
 
 ## Summary of Features
 
-- Display the pinned Rust policy and configure its daily-limit parameter.
-- Create a policy-bound vault with standing owner approval, then fund it.
-- Hand off SKILL.md and public executor.json without the owner's signing key.
-- Execute transfers using the designated executor and verify finalized receipts.
-- Persist signed bytes before broadcast and recover the same operation after uncertainty.
-- Tune the daily limit, pause with zero, revoke approval and withdraw remaining funds.
+- Native Rust SDK and CLI with separate policy and Solana client packages.
+- Rust backend with API, lifecycle, storage and integration crates.
+- React frontend with a thin API proxy and owner wallet signing.
+- Pinned native policy, vault initialization, standing approval and funding.
+- Executor transfers within the daily limit, with finalized receipt checks.
+- Pause, tune, revoke, withdraw and original-proof recovery.
+- Generic restricted-policy evaluation, owner questions and scoped agent access.
 
-The MVP uses one pinned kernel, UTC calendar days and six-decimal test tokens. Limits are per vault. The executor may select any recipient within that limit; recipient allowlists and semantic-purpose enforcement are not implemented. Prompt generation parameterizes existing policy code rather than compiling arbitrary new Rust. PaySH discovery is optional; paid API execution is future work.
+See [product](docs/product.md) for users and policy profiles.
 
 ## Tech Stack
 
 | Layer | Technology |
 | --- | --- |
-| Browser | React, Vite, TypeScript, AllowIt JavaScript SDK |
-| CLI candidate | Rust with the pinned AllowIt native Rust SDK |
-| Policy and custody | Native Rust Solana programs; minimal Pinocchio policy adapter |
-| Tokens and signing | Classic SPL Token, Wallet Standard sign-only, separate owner/executor identities |
-| Recovery | Durable local journal; browser IndexedDB signed-proof storage |
-| Verification | Rust/compiled-program tests, SDK conformance and public Testnet journeys |
+| On-chain programs | Native Rust Solana policy and custody programs, classic SPL Token |
+| SDK / Client | Native Rust policy SDK, separate Solana SDK, native Rust CLI |
+| Frontend | React, Vite, TypeScript, wallet adapter, IndexedDB journal |
+| Backend | Rust API, engine, storage and integration crates |
+| Hosted transport and storage | Thin TypeScript proxy, Vercel Rust function, PostgreSQL |
+| Testing | SDK/CLI checks, compiled-program tests, browser tests and Testnet receipts |
 
 ## Architecture
 
-Owner → AllowIt SDK → policy-bound vault → approval/funding → skill and executor context → executor-signed custody call → native policy → SPL transfer → finalized receipt.
+```mermaid
+flowchart LR
+    Browser[Owner browser] --> Proxy[Frontend proxy]
+    Agent[Agent / Rust CLI] --> Proxy
+    Proxy --> Backend[Rust backend / native SDK]
+    Backend --> SQL[(SQL state / recovery)]
+    Backend --> RPC[Solana RPC]
+    Agent -->|local native SDK / signing| RPC
+    RPC --> Programs[Shared custody / policy]
+```
 
-Shared immutable programs are deployed once; each owner creates vault state. The deployed executable identity is pinned separately from the policy source bundle. See [architecture](docs/architecture.md).
+See [architecture](docs/architecture.md) for components, signing, persistence and deployment. Main Preview uses this Rust architecture. Production retains its earlier integration.
 
 ## Quick Start
 
-This repository contains submission documentation. Use the AllowIt app, SDK, CLI and contract checkouts for execution; this repository does not build an application.
+Prerequisites: Git, Rust and an explicitly configured native test environment. Use the [CLI requirements](repos/AllowIt-hq--allowit-cli/README.md#build-from-source).
 
-The Rust CLI candidate builds with `cargo build --locked --release`. Configure an explicit Testnet RPC, bound mint, verified deployment and private owner/executor signer files. See [lifecycle commands](docs/api.md). The current Rust candidate is not a tagged release. The recorded public acceptance used the earlier Go/JavaScript bundle.
+```sh
+git clone --recurse-submodules https://github.com/AllowIt-hq/Colosseum.git
+cd Colosseum
+cd repos/AllowIt-hq--allowit-cli
+cargo build --locked --release
+./target/release/allowit --help
+```
+
+For an existing checkout, run `git submodule update --init --recursive`.
+
+Follow [commands and API](docs/api.md) for service configuration and the native lifecycle. Configure the accepted release, network, mint and separate owner/executor signers before signing. This repository contains reports and pinned source submodules.
 
 ## Roadmap
 
-- Recorded: public Solana Testnet SDK, compiled CLI and browser journeys.
-- Pending: release/platform acceptance for the Rust CLI candidate and native Phantom/iPhone acceptance.
-- Future: PaySH spending and delivery, distributed recovery and additional rail integration.
+- [x] Native Rust SDK and CLI source ports.
+- [x] Rust backend and thin frontend proxy in main Preview.
+- [x] Bounded Solana Testnet deployment, funding, spending, revocation and withdrawal.
+- [ ] Hosted generic-provider acceptance.
+- [ ] Production continuity, routing and release acceptance.
+- [ ] Native CLI Release and physical-wallet acceptance.
+- [ ] Additional rails and paid-service delivery.
 
-See [roadmap](docs/roadmap.md). Mainnet deployment and a production security audit are not claimed.
+See the [full roadmap](docs/roadmap.md) and [evidence](docs/evidence.md).
 
 ## Resources
 
-- [App entrypoint](https://app.allowit.xyz) — native Testnet requires a configured release-matching environment.
-- [Testnet evidence and example execution](docs/evidence.md).
-- **TODO:** exact configured native demo URL, video walkthrough, presentation, submission URL and public team contacts.
+- [Live Application](https://app.allowit.xyz)
+- [Public SDK](repos/AllowIt-hq--allowit-sdk/README.md)
+- [Public CLI](repos/AllowIt-hq--allowit-cli/README.md)
+- [Public Solana Contracts](repos/AllowIt-hq--allowit-contracts-solana/README.md)
+- [Architecture](docs/architecture.md) and [validation evidence](docs/evidence.md)
+- Presentation, video demo and public team contacts: pending.
 
 ## License
 
-The documentation template is MIT-licensed; its original notice is retained in [LICENSE](LICENSE). Application and contract licensing must be confirmed separately.
+MIT for this documentation. See [LICENSE](LICENSE). Included source repositories retain their own licenses.
 
-Adapted from [Marakaya/colosseum_example](https://github.com/Marakaya/colosseum_example/tree/315695b07dbf4c2fff3c0144a31c9153ddc0fdce). Architecture and acceptance details checked against local AllowIt records on October 6, 2026.
+Adapted from the [original Colosseum template](https://github.com/Marakaya/colosseum_example/tree/315695b07dbf4c2fff3c0144a31c9153ddc0fdce). Use the [completion guide](docs/completion-guide.md) for outstanding submission fields.

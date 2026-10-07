@@ -1,17 +1,36 @@
 # Product
 
-AllowIt gives an agent bounded spending authority without handing it the owner's signing key. The initial users are agent builders and wallet owners who need unattended token transfers with an explicit daily budget and an owner recovery path.
+## What is AllowIt?
 
-## User journey
+AllowIt provides owner-approved spending controls for agents. The native Rust SDK and backend validate policy requests. Shared Solana programs enforce the native vault policy. The owner retains signing and recovery controls.
 
-1. Generate the supported daily-limit policy and inspect the actual pinned Rust source.
-2. Create the vault and grant standing approval in an owner-signed transaction.
-3. Fund the vault and export SKILL.md plus public executor configuration.
-4. Configure a separate executor signer and execute transfers within the daily cap.
-5. Inspect finalized receipts; pause, revoke or withdraw through owner commands.
+The native kernel binds approval, executor, asset, daily spending, nonce and revision. Generic restricted policies can also request semantic evidence or owner input through the backend. Those functions do not extend the native kernel's on-chain rules.
 
-## Product boundary
+## Target Users
 
-On-chain enforcement covers approval, executor identity, the bound asset, daily accounting, nonce and revision. Task purpose and PaySH discovery instructions are metadata. The MVP has no recipient allowlist or semantic-policy enforcement, and separate vaults have separate budgets.
+- **Agent builders:** inspect permissions and execute supported operations through the Rust CLI.
+- **Wallet owners:** fund a bounded vault and retain pause, revocation and withdrawal controls.
+- **Application developers:** use the native SDK and backend APIs for policy, signing and recovery workflows.
 
-The distinction from unrestricted agent signing is that the executor key authorizes only supported vault spending. The distinction from approving every transfer is standing approval with a chain-enforced daily ceiling. No market share, performance advantage, customer traction or competitor feature claims are asserted here.
+## Core Value Propositions
+
+1. **Bounded authority:** the designated executor spends within the approved native policy.
+2. **Separate signing:** the owner keeps the owner key. The executor uses its own key.
+3. **Reviewed policy behavior:** source, executable identity and actual enforcement remain explicit.
+4. **Recoverable operations:** signed proofs preserve original identity through lost responses and reconciliation.
+
+An owner inspects the policy, signs initialization and standing approval, then funds the vault separately. The executor receives its skill and private configuration. The owner can inspect receipts, tune the limit, pause, revoke or withdraw.
+
+## How It Differs from Unrestricted Agent Signing
+
+| Control | Unrestricted agent signer | AllowIt native vault |
+| --- | --- | --- |
+| Spending authority | Authority follows the key's ordinary account permissions. | Designated executor, standing approval and bound daily policy. |
+| Owner key | The agent can hold the spending account's signer. | Owner key stays separate from the executor. |
+| Budget | Depends on external controls. | Shared custody enforces the per-vault daily ceiling. |
+| Recovery | Depends on the client implementation. | SDK journals original proofs and checks finalized effects. |
+| Owner control | Depends on account permissions. | Owner can pause, revoke and withdraw. |
+
+The native profile permits recipients within its daily cap. The separate allowance profile requires owner signing for each transfer. Main Preview uses the Rust backend. Hosted generic generation and Production release retain separate acceptance work.
+
+[Architecture](architecture.md) · [Evidence](evidence.md) · [Roadmap](roadmap.md)
