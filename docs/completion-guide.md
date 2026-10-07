@@ -28,8 +28,12 @@ The template's latency comparison and BBM competitors belong to its original pro
 
 Use [public repositories](../repos/README.md) for source links. Retain [evidence](evidence.md) as a supporting page. Do not create fake API routes, performance claims, screenshots or team details to fill template fields.
 
+## Team Placement
+
+Read the [original README template](https://github.com/Marakaya/colosseum_example/blob/315695b07dbf4c2fff3c0144a31c9153ddc0fdce/README.md) before changing the team section. The team table follows the submission heading directly. It sits after the demo area and before Problem and Solution. Preserve the section dividers. Keep event-status notes in this guide.
+
 ## Current Completion
 
 The reports use the latest native Rust architecture. Main Preview uses the frontend proxy and Rust backend. The bounded Testnet lifecycle has separate evidence. Production, hosted generic-provider acceptance and physical-wallet acceptance remain separate.
 
-The event, Max's public contact, configured demo URL, application image, video and presentation remain pending. Complete those fields with confirmed material before submission.
+The event, configured demo URL, application image, video and presentation remain pending. Complete those fields with confirmed material before submission.

@@ -9,16 +9,18 @@
 
 Video walkthrough and submission links: pending. Demo image: pending. The live application entrypoint does not identify the reviewed Rust Preview.
 
-## Submission to Colosseum
+---
 
-Registered event and public submission page: pending confirmation.
+## Submission to Colosseum
 
 | Name | Role | Contact |
 | --- | --- | --- |
 | Alex Astrum | tech, vision and SI alignment | [GitHub](https://github.com/alexastrum) |
-| Max | BD, marketing and operations | Pending |
+| Max | BD, marketing and operations | [GitHub](https://github.com/mks044) |
 | Igor Stolyarov | software engineering (front-end) | [GitHub](https://github.com/Magurin) |
 | Mukhammedali Beriktassuly | software engineering (smart contracts) | [GitHub](https://github.com/beriktassuly) |
+
+---
 
 ## Problem and Solution
 
