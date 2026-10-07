@@ -38,6 +38,6 @@ In practice, you inspect the policy, sign the vault initialization and standing 
 | Recovery | Depends on the client implementation. | SDK journals original proofs and checks finalized effects. |
 | Owner control | Depends on account permissions. | Owner can pause, tune, revoke and withdraw. |
 
-The native profile permits any recipient within its daily limit. The separate allowance profile requires an owner signature for each transfer. Main Preview uses the Rust backend. Production retains the earlier integration. Hosted generic policy generation and the Production release still need acceptance.
+The native profile permits any recipient within its daily limit. The separate allowance profile requires an owner signature for each transfer. Main Preview uses the Rust backend. Production also uses the Rust stack. Hosted generic-provider acceptance remains a release milestone.
 
 [Architecture](architecture.md) · [Evidence](evidence.md) · [Roadmap](roadmap.md)

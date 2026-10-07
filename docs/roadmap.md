@@ -14,13 +14,13 @@ The recorded Testnet cycle includes deployment, funding, executor spending, revo
 
 ## v1.1 — Production Release
 
-- [ ] PostgreSQL restore and pending-allocation continuity.
-- [ ] Independent backend Git routing and Production acceptance.
+- [x] PostgreSQL restore and pending-allocation continuity.
+- [x] Independent backend Git routing and Rust Production runtime checks.
 - [ ] Published native CLI Release with platform checksums and provenance.
 - [ ] Physical-wallet and selected iPhone acceptance.
 - [ ] Explicit Mainnet authority, configuration and security acceptance.
 
-Production retains its earlier integration.
+Production uses the Rust frontend and backend.
 
 ## v2.0 — Additional Rails and Operations
 

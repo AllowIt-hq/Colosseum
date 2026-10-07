@@ -84,9 +84,9 @@ The browser and CLI persist exact signed bytes before submission. The backend sa
 
 A lost response leaves an uncertain operation. Status reconciles that operation without signing a replacement. Method-specific expiry evidence can establish non-execution. Uncertain funding or withdrawal can require another explicitly authorized owner operation.
 
-Frontend and Rust backend releases remain independent. Current main Preview uses the proxy and Rust backend. Production retains its earlier integration. Backend native Git routing remains planned. Contract release changes require compatible SDK and backend pins.
+Frontend and Rust backend releases remain independent. Main Preview and Production use the proxy and Rust backend. Native Git routes the frontend and backend independently. Contract release changes require compatible SDK and backend pins.
 
-The bounded Rust Testnet lifecycle passed deploy, fund, executor spend, revoke, withdrawal and recovery checks. Hosted generic generation remains blocked by provider errors. Stellar, Etherfuse, PaySH payment delivery and hosted-agent execution remain outside this MVP. Lean checks run offline against specific pinned models. They do not certify authentication, storage, provider truth or whole-system correctness.
+The bounded Rust Testnet lifecycle passed deploy, fund, executor spend, revoke, withdrawal and recovery checks. Stellar, Etherfuse, PaySH payment delivery and hosted-agent execution remain outside this MVP. Lean checks run offline against specific pinned models. Their theorem scope covers the pinned models.
 
 See [evidence](evidence.md) for revisions and [commands](api.md) for operational use.
 

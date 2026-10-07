@@ -91,7 +91,7 @@ flowchart LR
     RPC --> Programs[Shared custody / policy]
 ```
 
-See [architecture](docs/architecture.md) for components, signing, persistence and deployment. Main Preview uses this Rust architecture. Production retains its earlier integration.
+See [architecture](docs/architecture.md) for components, signing, persistence and deployment. Main Preview and Production use this Rust architecture.
 
 ## Quick Start
 
@@ -115,7 +115,7 @@ Follow [commands and API](docs/api.md) for service configuration and the native 
 - [x] Rust backend and thin frontend proxy in main Preview.
 - [x] Bounded Solana Testnet deployment, funding, spending, revocation and withdrawal.
 - [ ] Hosted generic-provider acceptance.
-- [ ] Production continuity, routing and release acceptance.
+- [x] PostgreSQL continuity, independent routing and Rust Production release.
 - [ ] Native CLI Release and physical-wallet acceptance.
 - [ ] Additional rails and paid-service delivery.
 
