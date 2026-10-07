@@ -40,4 +40,4 @@ In practice, you inspect the policy, sign the vault initialization and standing 
 
 The native profile permits any recipient within its daily limit. The separate allowance profile requires an owner signature for each transfer. Main Preview uses the Rust backend. Production also uses the Rust stack. Hosted generic-provider acceptance remains a release milestone.
 
-[Architecture](architecture.md) · [Evidence](evidence.md) · [Roadmap](roadmap.md)
+[Architecture](architecture.md) · [Roadmap](roadmap.md)

@@ -26,7 +26,7 @@ Follow the [original template](https://github.com/Marakaya/colosseum_example/tre
 
 The template's latency comparison and BBM competitors belong to its original product. Replace them with AllowIt authority and signing comparisons. Preserve the purpose of each section.
 
-Use [repositories](../repos/README.md) for source links. Retain [evidence](evidence.md) as a supporting page.
+Use [repositories](../repos/README.md) for source links.
 
 ## Team Placement
 

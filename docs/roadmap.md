@@ -10,7 +10,7 @@
 - [ ] Hosted generic generation and preference-provider acceptance.
 - [ ] Event, demo URL, video and presentation.
 
-The recorded Testnet cycle includes deployment, funding, executor spending, revocation and withdrawal. See [evidence](evidence.md) for exact revisions and scope.
+The recorded Testnet cycle includes deployment, funding, executor spending, revocation and withdrawal.
 
 ## v1.1 — Production Release
 

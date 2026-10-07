@@ -1,7 +1,7 @@
 # AllowIt — Go on. On your terms.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-14F195.svg)](LICENSE)
-[![Solana Testnet](https://img.shields.io/badge/Solana-Testnet-9945FF)](docs/evidence.md)
+[![Solana Testnet](https://img.shields.io/badge/Solana-Testnet-9945FF)](https://explorer.solana.com/?cluster=testnet)
 
 > AllowIt lets your AI agents spend and invest, within a policy you set.
 
@@ -119,7 +119,7 @@ Follow [commands and API](docs/api.md) for service configuration and the native 
 - [ ] Native CLI Release and physical-wallet acceptance.
 - [ ] Additional rails and paid-service delivery.
 
-See the [full roadmap](docs/roadmap.md) and [evidence](docs/evidence.md).
+See the [full roadmap](docs/roadmap.md) and [evidence](https://explorer.solana.com/?cluster=testnet).
 
 ## Resources
 
@@ -128,7 +128,7 @@ See the [full roadmap](docs/roadmap.md) and [evidence](docs/evidence.md).
 - [SDK](repos/AllowIt-hq--allowit-sdk/README.md)
 - [CLI](repos/AllowIt-hq--allowit-cli/README.md)
 - [Solana Contracts](repos/AllowIt-hq--allowit-contracts-solana/README.md)
-- [Architecture](docs/architecture.md) and [validation evidence](docs/evidence.md)
+- [Architecture](docs/architecture.md) and [validation evidence](https://explorer.solana.com/?cluster=testnet)
 
 ## License
 

@@ -10,7 +10,7 @@ Read the [original Colosseum template](https://github.com/Marakaya/colosseum_exa
 
 The [original README](https://github.com/Marakaya/colosseum_example/blob/315695b07dbf4c2fff3c0144a31c9153ddc0fdce/README.md) places the team table directly under the submission heading. Keep it after the demo area and before Problem and Solution. Preserve the section dividers. Keep pending event information in the [completion guide](docs/completion-guide.md).
 
-Keep the template's architecture, product, API and roadmap file purposes. Adapt product-specific headings without copying BBM claims. Follow the [completion guide](docs/completion-guide.md) and [contribution instructions](CONTRIBUTING.md).
+Use only the template's architecture, product, API and roadmap report files. Do not add evidence.md or other report pages outside the template. Keep detailed validation in private artifacts. Keep the template's file purposes. Adapt product-specific headings without copying BBM claims. Follow the [completion guide](docs/completion-guide.md) and [contribution instructions](CONTRIBUTING.md).
 
 ## Owner-supplied team text
 

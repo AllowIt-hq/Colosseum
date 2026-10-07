@@ -88,7 +88,7 @@ Frontend and Rust backend releases remain independent. Main Preview and Producti
 
 The bounded Rust Testnet lifecycle passed deploy, fund, executor spend, revoke, withdrawal and recovery checks. Stellar, Etherfuse, PaySH payment delivery and hosted-agent execution remain outside this MVP. Lean checks run offline against specific pinned models. Their theorem scope covers the pinned models.
 
-See [evidence](evidence.md) for revisions and [commands](api.md) for operational use.
+See [commands](api.md) for operational use.
 
 ## Authority Comparison
 
