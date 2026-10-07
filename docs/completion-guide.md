@@ -32,4 +32,4 @@ Use [public repositories](../repos/README.md) for source links. Retain [evidence
 
 The reports use the latest native Rust architecture. Main Preview uses the frontend proxy and Rust backend. The bounded Testnet lifecycle has separate evidence. Production, hosted generic-provider acceptance and physical-wallet acceptance remain separate.
 
-The event, team contacts, configured demo URL, application image, video and presentation remain pending. Complete those fields with confirmed material before submission.
+The event, Max's public contact, configured demo URL, application image, video and presentation remain pending. Complete those fields with confirmed material before submission.

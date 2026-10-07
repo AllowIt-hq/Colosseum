@@ -15,7 +15,10 @@ Registered event and public submission page: pending confirmation.
 
 | Name | Role | Contact |
 | --- | --- | --- |
-| Pending | Pending | Pending |
+| Alex Astrum | tech, vision and SI alignment | [GitHub](https://github.com/alexastrum) |
+| Max | BD, marketing and operations | Pending |
+| Igor Stolyarov | software engineering (front-end) | [GitHub](https://github.com/Magurin) |
+| Mukhammedali Beriktassuly | software engineering (smart contracts) | [GitHub](https://github.com/beriktassuly) |
 
 ## Problem and Solution
 
@@ -123,7 +126,7 @@ See the [full roadmap](docs/roadmap.md) and [evidence](docs/evidence.md).
 - [Public CLI](repos/AllowIt-hq--allowit-cli/README.md)
 - [Public Solana Contracts](repos/AllowIt-hq--allowit-contracts-solana/README.md)
 - [Architecture](docs/architecture.md) and [validation evidence](docs/evidence.md)
-- Presentation, video demo and public team contacts: pending.
+- Presentation and video demo: pending. Team contacts appear in the submission section.
 
 ## License
 
