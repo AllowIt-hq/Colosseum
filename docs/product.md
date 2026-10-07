@@ -8,7 +8,7 @@ You describe the job, the money and the judgement calls in your own words. Allow
 
 Policy evaluation follows two paths:
 
-- **Native Solana vault.** A designated executor spends one bound asset under your standing approval, within a daily limit. The on-chain programs enforce the executor, approval, asset, daily limit, nonce and policy revision. 
+- **Native Solana vault.** A designated executor spends one bound asset under your standing approval, within a daily limit. The on-chain programs enforce the executor, approval, asset, daily limit, nonce and policy revision.
 - **Generic restricted policies.** The Rust backend evaluates these policies. The backend obtains semantic evidence and binds it to the exact action. These policies can send questions to you.
 
 The Rust SDK and backend handle policy requests, signing and recovery.
