@@ -1,16 +1,24 @@
 # Roadmap
 
-## Recorded acceptance
+Updated October 7, 2026.
 
-Public Solana Testnet: policy generation, vault creation/approval, funding, executor spending, exact-signature replay, over-limit refusal, pause, revoke and withdrawal. Browser-to-CLI handoff and mobile WebKit public-chain journeys are recorded for specific releases; see [evidence](evidence.md).
+## Completed architecture and staging work
 
-## Required before submission
+The native Rust SDK and CLI source ports are merged. The Rust backend composes API, engine, storage and integrations. Main Preview reaches it through the frontend proxy. Native browser validation and preparation use backend APIs.
 
-- Confirm the event, team roles and public contacts.
-- Record a concise native-vault demo and provide the configured demo URL and deck.
-- Bind all readiness claims to exact source releases, checks and finalized receipts.
-- Validate the current Rust CLI candidate before describing it as released or public-chain accepted.
+A bounded Solana Testnet cycle completed deployment, funding, executor spending, revocation and withdrawal. Original signed proofs, SQL records and finalized effects survived recovery and backend redeployment. See [evidence](evidence.md).
 
-## Subsequent work
+## Remaining release work
 
-Native Phantom/iPhone acceptance, PaySH payment compatibility and service delivery, distributed recovery, additional rails and production authority/security review. Mainnet is outside the demonstrated release.
+- Repair hosted generic generation and check the configured preference-provider path.
+- Complete PostgreSQL restore and pending-allocation continuity checks before Production migration.
+- Complete independent backend Git routing and Production release acceptance.
+- Publish an accepted native CLI Release with platform artifacts, checksums and provenance.
+- Complete physical-wallet and selected iPhone acceptance.
+- Supply verified event, team, demo, video and presentation details for Colosseum.
+
+## Subsequent integration work
+
+Stellar needs its own client, credentials, network, journal and settlement acceptance. Etherfuse and PaySH need verified operation adapters and service-delivery evidence. Hosted agents remain an optional separate system outside the MVP. Mainnet requires explicit release authority, deployment configuration and security acceptance.
+
+These integrations must preserve exact action binding, owner authority and recovery. Existing generic semantic checks do not imply native on-chain semantic enforcement.

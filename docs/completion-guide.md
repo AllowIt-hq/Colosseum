@@ -1,28 +1,29 @@
-# Colosseum template completion report
+# Submission checklist
 
-Fill this for **AllowIt’s native Solana vault MVP**, built entirely on **AllowIt infrastructure**: SDK, CLI, policy and custody programs. Use the template’s structure and replace its BBM content. These are filling instructions, not submission answers.
+Use the [architecture](architecture.md), [product](product.md), [commands](api.md) and [evidence](evidence.md) as the technical report. Keep the submission focused on the native Rust architecture and bounded Solana vault lifecycle.
 
-| Template section | How to fill it |
-| --- | --- |
-| Title, description, badges | Explain standing approval and bounded executor spending. Identify Testnet and the exact demonstrated release; link its CI. |
-| Demo links and image | Show the native app (`?native=1`), policy source, funded vault and finalized execution. Add video/submission links and replace `assets/project.jpg`. |
-| Hackathon and team | Confirm the event name, team members, roles and public contact links. Remove the example founder and contacts. |
-| Problem and Solution | Describe repeated signing versus unrestricted agent custody; connect the problem to a vault, daily cap, designated executor and owner recovery. |
-| Why Solana | Explain PDA custody, native policy invocation, atomic SPL transfer/accounting and verifiable finalized receipts. |
-| Features | Display pinned Rust; deploy/approve, fund, execute, tune/pause, revoke/withdraw; export SKILL.md/executor.json; recover signed requests. |
-| Tech Stack | Browser: React/Vite/TypeScript and AllowIt JavaScript SDK. CLI candidate: Rust plus pinned AllowIt native Rust SDK. Contracts: AllowIt native Rust policy and custody programs. |
-| Architecture | Owner → AllowIt SDK → policy-bound PDA vault → standing approval/funding → skill + executor context → executor-signed AllowIt custody call → AllowIt native policy → SPL transfer → finalized receipt. |
-| Quick Start | Document `?native=1`, `cargo build --locked --release` and `allowit policy` commands. Configure test cluster, mint, release and separate owner/executor signers. |
-| Roadmap | Separate recorded Testnet acceptance from Rust-candidate release/platform validation, native wallets/devices, PaySH payments, distributed recovery and subsequent rails. |
-| Resources | Supply the deck, video, live app, source repositories and public project contacts. Remove every `#` placeholder. |
-| License | Confirm rights and the intended license for every included repository before adopting MIT. |
+## Required submission material
 
-Adapt the four `docs/` files for audience, AllowIt policy/custody separation, SDK/ABI and acceptance gaps. Shared programs are deployed once; owners create vault state. Pin source and executable identities separately.
+- Check the registered event and public project page.
+- Supply team names, roles and public contact links.
+- Supply the configured demo URL, video and presentation.
+- Show owner review, deployment, funding, executor spending and finalized receipts.
+- Show one policy denial, recovery, revocation and withdrawal.
+- Identify the exact app, backend, CLI, SDK and contract revisions used in the demo.
+- State the network and test mint clearly.
 
-The BBM template contains stub code/tests and inconsistent network defaults. Reuse its presentation structure.
+## Repository and release checks
 
-Scope: one pinned daily-limit kernel, UTC days and a six-decimal test token. Limits are per vault; there is no recipient allowlist or semantic-purpose enforcement. Generation parameterizes the kernel, not arbitrary prompt-authored Rust. PaySH discovery is opt-in; payment spending remains follow-up.
+Initialize the [public submodules](../repos/README.md) at their committed gitlinks. Build the CLI from its pinned source. Follow its checksum and provenance instructions when using workflow binaries. Keep private backend, frontend and contract repositories outside the public submodule set.
 
-Evidence: October 5 acceptance records public Testnet settlement using browser signing fixtures and the earlier Go/JavaScript bundle. It excludes the Rust candidate, Phantom/iPhone, Mainnet, paid API delivery and security audit. Attach release-bound receipts, denial, recovery and revoke/withdraw evidence. Native vault spends are executor-signed under standing owner approval.
+Match public release configuration with the actual program identities before execution. Separate source identity from deployed executable identity. Use the owner wallet or local owner signer for owner operations. Use only the designated executor signer for native spending.
 
-Updated October 6, 2026 from AllowIt-app `4e8314a`, allowit-cli `7761cf6`, AllowIt-sdk `21b3660`, AllowIt-contracts-solana `2554df8`, and the captured October 5 Testnet acceptance record. Template baseline: [inspected revision](https://github.com/Marakaya/colosseum_example/tree/315695b07dbf4c2fff3c0144a31c9153ddc0fdce). Deployment health and candidate tests were not rerun for this report.
+Keep capabilities, signer files, journals and signed proofs out of public recordings and Git. A generated executor bundle can contain a private audit capability.
+
+## Claims and readiness
+
+Describe current Rust Preview behavior and the recorded Testnet cycle. Keep Production migration, hosted provider repair, physical-wallet acceptance and native binary publication in the [roadmap](roadmap.md).
+
+Describe the native kernel's actual approval and daily-limit rules. Generic policy evaluation and Jev evidence are separate capabilities. PaySH, Etherfuse and Stellar need their own integration and delivery evidence.
+
+The repository's [MIT notice](../LICENSE) applies to this documentation. The [SDK license](../repos/AllowIt-hq--allowit-sdk/LICENSE) and [CLI license](../repos/AllowIt-hq--allowit-cli/LICENSE) remain in their source repositories. Confirm licenses separately for other components.
