@@ -1,6 +1,6 @@
 # Human-facing report policy
 
-Keep transient diagnostics in private project run artifacts. Do not publish provider errors, HTTP failures, retries or temporary service conditions. Permanent reports contain implementation facts and the latest relevant completed execution. Remove generic disclaimers and debugging commentary. Do not link private project records from public reports.
+Keep all evidence and validation records in private project run artifacts. Do not add evidence pages or sections to reports unless the owner explicitly requests them. Do not publish provider errors, HTTP failures, retries or temporary service conditions. Permanent reports contain implementation facts and the latest relevant completed execution. Remove generic disclaimers and debugging commentary. Do not link private project records from public reports.
 
 # Colosseum report instructions
 
