@@ -9,7 +9,7 @@
 - [x] Solana Testnet vault lifecycle: deploy, fund, executor spend, revoke, withdraw and recovery.
 - [x] CLI workflow builds for Linux x64, macOS Apple Silicon and macOS Intel.
 - [ ] KASE: corporate-action ABI, holder custody and record snapshots.
-- [ ] KASE: coupon, maturity redemption and advisory vote functions in `corporate_actions`.
+- [ ] KASE: `allowit::` coupon, maturity redemption and advisory vote operations on `corporate_actions` domain state.
 - [ ] KASE: shared `allowit` base library linked into custody gate.
 - [ ] KASE: SDK, backend, CLI and skill operations, plus issuer and holder views.
 - [ ] KASE: Devnet demo with exact entitlements and duplicate refusal.
