@@ -156,25 +156,18 @@ Jev context keeps the full original owner prompts and the full deployed policy. 
 
 A policy revision starts only from an explicit owner request. The backend makes a new draft, checks it with the compiler and waits for owner approval. Thus AllowIt never changes a policy silently.
 
-### Wallets and Signing
+### Detailed References
 
-```mermaid
-flowchart LR
-    Owner((Owner)) --> BW[Wallet Standard wallet]
-    Owner --> OK[Owner keyfile]
-    Agent((Agent)) --> EK[Executor keyfile]
-    Server[Rust server] -->|prepares| BW
-    Server --> SA[Server authority key]
-    BW -->|owner ops| Vault[(Vault)]
-    OK -->|owner ops| Vault
-    EK -->|bounded spend| Vault
-    SA -->|co-signs spend| Vault
-    Agent --> TS[Tempo signer]
-```
-
-The browser accepts any Wallet Standard wallet that can connect and sign messages and legacy transactions on Solana Testnet. Sign-in uses a signed message, and owner operations use signed transactions. The app suggests Phantom or Solflare.
-
-Owner and agent use separate CLI keyfiles. The executor keyfile can only spend within standing approval. A native spend also needs the server authority signature on the same transaction, after server checks pass. That signature is trusted authorization, not proof of semantic correctness. The backend prepares owner transactions but holds no owner or executor key. Each rail has its own signing adapter.
+- [Rust backend](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/allowit-rust-server.md): Backend crates, lifecycle state, storage and integration ports.
+- [SDK](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/allowit-sdk.md) · [Policy language](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/rust-policy-language.md): Compiler, checked IR, evaluator and registry, with authoring rules for restricted Rust policy source.
+- [Operation lifecycle](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/lifecycle.md): Validation, approved execution and atomic native enforcement for institutional custody.
+- [App](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/allowit-app.md) · [Execution assurance](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/execution-assurance.md): Policy review and private agent handoff, with custody and signing profiles.
+- [Native contracts](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/allowit-contracts.md): Solana and Stellar account validation, custody, authority and activation binding.
+- [Stellar interfaces](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/stellar.md): Native authorization and typed token and vault operations.
+- [KASE instrument types](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/types/bond.md): Instruments, holder positions, snapshots, coupon and redemption requests.
+- [Tempo interfaces](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/tempo.md) · [Tempo token and vault](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/tempo-token-vault.md): Bond, voting and compliance interfaces, with token and vault bindings.
+- [PaySH adapter types](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/types/paysh.md): Discovery, payment challenges, approved requests and delivery records.
+- [Etherfuse adapter](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/etherfuse.md): Quote and order schemas, event handling and replacement transaction preparation.
 
 ### Packaging and Platforms
 
@@ -196,67 +189,49 @@ The CLI packages one `allowit` binary per platform. Platform targets are Linux x
 ### Corporate Actions and Rails
 
 ```mermaid
-flowchart TB
-    Server[Rust server] --> Sol[Solana rail]
-    Server --> Tempo[Tempo rail]
-    Sol --> Native[Native vault]
-    Native --> Daily[Daily-limit policy]
-    Sol --> Gate[Custody gate G]
-    Gate --> KASE[KASE actions]
+flowchart LR
+    SDK[SDK checks] --> Req[Signed request]
+    Req --> G[Custody gate G]
+    B[Base B<br/>Static link] --> G
+    P[Policy P<br/>Adds limits] --> G
+    V[Verifier V<br/>Read-only] --> G
+    G --> Cash[(Cash custody)]
+    G -->|scoped commit| D[(Domain D)]
 ```
 
-**KASE corporate actions.** The `corporate_actions` domain covers coupons, maturity redemption and advisory holder votes. Holder positions stay in program custody. Each record date seals an immutable snapshot. A typed ABI derives each payment and burn with exact integer arithmetic.
+**KASE corporate actions.** The `corporate_actions` domain covers coupons, maturity redemption and advisory holder votes. Holder positions stay in program custody. Each record date seals an immutable snapshot. Later transfers cannot change entitlements fixed at cutoff. A typed ABI derives each payment and burn with checked integer arithmetic. Exact integers give every party the same result and prevent rounding differences between implementations.
 
-**Request execution.** In the generic custody gate profile for KASE corporate actions, gate cash actions and sequenced domain commits have one public entrypoint: `execute(request)`. The daily-limit native vault keeps its separate vault ABI 2 spend path. The SDK checks the policy offchain and then signs the exact request. The signature covers the request hash, nonce, expiry, module versions and rail binding. The custody gate authenticates the request and rechecks mandatory invariants against current chain state. It then applies all effects in one atomic transaction. After the effects, G reloads the relevant accounts and checks the cash, burn and consumed-domain deltas. Only then does G record its settlement receipt. A failed check or a delta mismatch reverts effects, spending and nonce use. The contract stores no separate authorization grant. SDK checks cannot replace gate checks. Holder position transfers, destination rebinding and ballots are separate typed domain actions. They move no cash and do not use the gate sequence. Initialization and issuance go directly to D under the approved issuer authority. That issuer path is separate from the holder-signed actions.
+**Execution profiles.** Two profiles stay separate. The native daily-limit vault uses its own vault ABI for standing-approval spends. The general institutional custody gate serves corporate actions through one entrypoint, `execute(request)`. The SDK checks policy offchain and signs the exact request. The gate rechecks mandatory invariants against current chain state and applies all effects atomically. It then verifies cash, burn and domain deltas. A failed check or delta mismatch reverts all effects.
 
 **Module roles.** These labels are roles, not contract methods:
 
-- **G, custody gate.** Owns cash custody, owner scope, budgets, reserves, action sequence, replay markers and settlement receipts. It executes exact cash transfers and keeps its cash signer private.
-- **D, domain state.** Holds authoritative domain data, such as `corporate_actions` positions, snapshots, obligations, ballots and bond escrow. It performs permitted bond burns with its own escrow authority. For sequenced commits, G authorizes D with a separate request-scoped authority. D receives no G cash signer. Holders sign nonspending position transfers, destination rebinding and ballots directly to D, and D enforces mandatory domain checks on each. Initialization and issuance require the approved issuer authority.
-- **B, shared base.** Read-only `allowit` checks for binding, approval, replay, budget and effect bounds. It links statically into G, so it needs no separate deployment or cross-program call.
-- **P, owner policy.** Adds restrictions. It cannot remove mandatory gate or domain checks.
-- **V, vendor verifier.** Read-only. It supplies admitted facts, such as `etherfuse` order data, and receives no custody signer.
+- **G, custody gate.** Holds cash custody, budgets, replay state and settlement receipts. Only G moves cash, so financial effects stay in one checked place.
+- **D, domain state.** Holds positions, snapshots, obligations, ballots and bond escrow. D never receives the G cash signer, so it cannot sign cash transfers. Holder operations require holder consent. Initialization and issuance require approved issuer authority.
+- **B, shared base.** Read-only common checks for binding, approval, replay, budget and effect bounds. B links statically into G. The execute path always runs these checks. Static linking avoids a separate deployment and cross-program call for B.
+- **P, owner policy.** Adds restrictions. It never removes mandatory native checks.
+- **V, vendor verifier.** Read-only. It supplies admitted facts, such as `etherfuse` order data, and holds no custody signer.
 
-**Operation namespaces.** A public operation prefix names the documented origin of an operation. `allowit` covers portable rules and corporate-action rules. Corporate-action operations, such as coupon, record, redemption and vote operations, follow the naming pattern `allowit::<subject>_<action>`, for example `allowit::coupon_calculate`. This pattern is a naming convention, not a literal function or sub-namespace. A name that follows it resolves only through an exact registry entry. `solana`, `stellar` and `tempo` name rail profiles. `jev` names semantic calls. `etherfuse` and other documented vendor prefixes name vendor endpoints. Domain and module labels are not operation prefixes: `corporate_actions` names domain state D only. Policy source accepts the exact registered `allowit::` aliases for 16 core operations, plus `jev::semantic` and `jev::check_preference`. Each qualified alias lowers to the same canonical operation as its flat name. Every compiler and runtime binding must support that exact registry. The compiler resolves only exact registered entries. It never strips an unknown prefix to reach a suffix. A prefix grants no authority. Each module identity binds its namespace, version and rail deployment, and that identity cannot change after release.
+**Module binding.** Each module identity binds its exact namespace, version and rail deployment. This binding is immutable after release. A substituted module or redeployed program cannot satisfy a signed request. A namespace prefix grants no authority.
 
-```mermaid
-flowchart TB
-    Caller((Caller)) --> SDK[SDK offchain checks]
-    SDK --> Req[Signed request<br/>Hash / nonce / expiry<br/>Module version / rail]
-    subgraph Gate[Custody gate G]
-        Base[allowit base B<br/>Static link / read-only<br/>Effect bounds] --> Check
-        Check["execute(request)<br/>Mandatory checks"] --> Commit[Atomic effects]
-        Commit --> Verify[Reload accounts<br/>Cash / burn / domain deltas]
-        Verify -->|match| Receipt[Settlement receipt]
-        Verify -->|mismatch| Revert[Roll back all]
-    end
-    Req --> Check
-    Reg[Module identity<br/>Namespace / version / rail] --> Check
-    Policy[Owner policy P<br/>Adds restrictions] --> Check
-    Vendor[etherfuse verifier V<br/>Admitted facts / no signer] --> Check
-    Domain[(corporate_actions state D<br/>Authoritative)] --> Check
-    Commit -->|cash transfer| Cash[(G cash custody)]
-    Commit -->|request-scoped commit| Domain
-    Domain -->|permitted burn| Escrow[(D bond escrow)]
-    Holder((Holder)) -->|transfer / rebind / ballot<br/>Domain checks| Domain
-    Issuer((Issuer)) -->|initialize / issue<br/>Issuer authority| Domain
-    Caller --x|no bypass| Cash
-    Caller --x|no sequenced bypass| Domain
-```
+**Rails.** Rail adapters isolate differences in network, asset, fees, signature format and clock. Adapters preserve portable rule semantics while binding each rail’s native constraints. Each approved rail or profile binds its exact native constraints. Solana, Stellar and Tempo keep separate profiles.
 
-SDK signs exact request after offchain checks. Base B links statically into G and checks binding, approval, replay, budget and effect bounds, with no separate deployment or cross-program call. G rechecks mandatory invariants and applies all effects atomically. G moves cash with its own signer. D commits sequenced changes and permitted bond burns under request-scoped G authority, without G cash signer. G then reloads accounts and checks cash, burn and consumed-domain deltas before it records its settlement receipt. A failed check or mismatch rolls back all effects. Policy and vendor roles stay read-only and hold no custody signer. Policy only adds restrictions. Direct calls cannot bypass G for cash or sequenced commits. Holder-signed position transfers, destination rebinding and ballots go directly to D, which enforces mandatory domain checks. Initialization and issuance also go directly to D, but under approved issuer authority, separate from holder routes.
+## Chain deployment choices
 
-**Tempo rail.** The rail adapter binds network, asset, fees and signer. It handles receipts and maps policy enforcement to rail capabilities. Each rail needs a proven Rust target or an enforcement adapter.
+### On-chain policy enforcement: smart-contract wallet vs simple wallet
 
-## Authority Comparison
+AllowIt supports two wallet models. Each model enforces policy in a different place. The choice depends on value at risk and on the need for independent limits.
 
-AllowIt keeps custody, owner keys, agent keys and semantic judgement apart. The native kernel never consults a model.
+A simple wallet uses one isolated signer and an offchain policy service. The service checks each proposed transaction before the signer signs it. This model costs less to deploy and operate because it needs no custom custody contract. The agent receives no spending key. A compromised signer or policy service can bypass the offchain restrictions. A simple wallet provides less independent protection than a contract wallet.
 
-| Profile | Who authorizes a spend? | Enforcement |
-| --- | --- | --- |
-| Native vault | Owner grants standing approval. Executor and server authority sign each spend. | Custody and policy programs enforce asset, action and daily limits, approval, nonce, expiry and instance slot. |
-| Allowance | Owner signs each exact transfer. | Backend evaluates policy and checks finalized effects. |
-| Generic policy | Backend, with rules, oracle evidence and owner answers. | Backend. On-chain profiles fail on owner input. |
-| Corporate actions | Owner approves a servicing executor. Holders sign votes. | Custody gate through `execute(request)` for cash and sequenced commits, with linked `allowit` base checks. `corporate_actions` domain state checks issuer-authorized initialization and issuance, and holder transfers, rebinding and votes. |
+A smart-contract wallet keeps funds in a custody contract. The contract applies mandatory native profile limits atomically at execution, independent of offchain assessment. It rejects a signed request that violates those limits. This model has higher deployment, execution and storage cost.
+
+| Wallet | Enforcement | Cost | Preferred use |
+| --- | --- | --- | --- |
+| Simple wallet | Offchain policy service and isolated signer. | Lower deployment and operating cost. Normal transaction fees. | Consumer and lower-value workflows that accept trust in signer and policy service. |
+| Smart-contract wallet | Custody contract applies mandatory native limits atomically at execution. | Higher deployment, execution and storage cost. | Higher-value and institutional workflows that need independent limits. |
+
+Contract safety depends on the concrete constraints that the contract enforces, such as amount, recipient and budget. Semantic oracle assessment remains an offchain responsibility.
+
+Solana, Stellar and Tempo use separate profiles for native constraints, fees and clocks.
 
 See [commands](api.md) for operational use.
