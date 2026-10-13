@@ -7,3 +7,18 @@
 [submodule "repos/AllowIt-hq--allowit-contracts-solana"]
 	path = repos/AllowIt-hq--allowit-contracts-solana
 	url = https://github.com/AllowIt-hq/allowit-contracts-solana.git
+[submodule "repos/AllowIt-hq--allowit-engine"]
+	path = repos/AllowIt-hq--allowit-engine
+	url = https://github.com/AllowIt-hq/allowit-engine.git
+[submodule "repos/AllowIt-hq--allowit.xyz"]
+	path = repos/AllowIt-hq--allowit.xyz
+	url = https://github.com/AllowIt-hq/allowit.xyz.git
+[submodule "repos/AllowIt-hq--allowit-contracts-stellar"]
+	path = repos/AllowIt-hq--allowit-contracts-stellar
+	url = https://github.com/AllowIt-hq/allowit-contracts-stellar.git
+[submodule "repos/AllowIt-hq--app.allowIt.xyz"]
+	path = repos/AllowIt-hq--app.allowIt.xyz
+	url = https://github.com/AllowIt-hq/app.allowIt.xyz.git
+[submodule "repos/AllowIt-hq--allowit.xyz-project"]
+	path = repos/AllowIt-hq--allowit.xyz-project
+	url = https://github.com/AllowIt-hq/allowit.xyz-project.git
