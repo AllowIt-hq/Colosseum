@@ -114,17 +114,17 @@ Follow [commands and API](docs/api.md) for service configuration and the native 
 - [x] Native Rust policy SDK, compiler, language server, Solana client and CLI.
 - [x] Rust backend and independent React frontend with a thin same-origin proxy.
 - [x] Solana Testnet vault lifecycle: deploy, fund, executor spend, revoke, withdraw and recovery.
-- [x] KASE prototype: program for Solana Devnet with operator mandates, bondholder votes, coupons and redemption.
-- [x] KASE prototype: Rust owner and agent APIs, agent skill and issuer console.
-- [ ] KASE shared custody gate for corporate actions, linking the shared `allowit` base library, with SDK, backend, CLI and skill operations.
-- [ ] KASE Devnet demo with exact entitlements and duplicate refusal.
+- [x] Basic PaySH integration with a simple wallet.
+- [x] KASE: coupons, maturity redemption, holder votes, operator mandates, Rust APIs, agent skill, issuer console and holder register.
+- [x] KASE Devnet demo with exact entitlements and duplicate refusal.
 - [x] Tempo native policy payments with signing, receipt handling and recovery.
 - [x] Tempo Machine Payments Protocol (MPP) purchases bound to service challenges across SDK, backend, CLI and app.
-- [ ] Tempo policy-bound payment with a verified receipt on a public network.
-- [ ] Hosted generic-provider acceptance.
+- [x] Tempo policy-bound payment with a verified receipt on a public network.
+- [x] Hosted generic-provider acceptance.
 - [x] Production runtime, PostgreSQL storage and restore, and Tempo and KASE configuration.
+- [ ] KASE shared custody gate and `allowit` base-library composition, with SDK, CLI and holder views.
 - [ ] Tagged native CLI Release and physical-wallet acceptance.
-- [ ] Additional rails and service delivery: Stellar, Etherfuse and PaySH.
+- [ ] Additional rails and native-vault service delivery and recovery: Stellar, Etherfuse and PaySH.
 
 See the [full roadmap](docs/roadmap.md).
 
