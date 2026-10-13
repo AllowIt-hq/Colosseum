@@ -8,14 +8,18 @@
 - [x] Independent React frontend with a thin same-origin proxy.
 - [x] Solana Testnet vault lifecycle: deploy, fund, executor spend, revoke, withdraw and recovery.
 - [x] CLI workflow builds for Linux x64, macOS Apple Silicon and macOS Intel.
-- [ ] KASE: corporate-action ABI, holder custody and record snapshots.
+- [x] KASE prototype: program for Solana Devnet with operator mandates, holder register, record snapshots, entitlements, coupons, redemption and bondholder votes.
+- [x] KASE prototype: Rust owner and agent APIs, retry protection, generated agent skill, issuer console and holder register.
+- [ ] KASE shared custody gate: corporate-action ABI, holder custody and record snapshots.
 - [ ] KASE: `allowit::` coupon, maturity redemption and advisory vote operations on `corporate_actions` domain state.
 - [ ] KASE: shared `allowit` base library linked into custody gate.
-- [ ] KASE: SDK, backend, CLI and skill operations, plus issuer and holder views.
+- [ ] KASE shared custody gate: SDK, backend, CLI and skill operations, plus issuer and holder views.
 - [ ] KASE: Devnet demo with exact entitlements and duplicate refusal.
-- [ ] Tempo: rail adapter with network, asset, fee and signer binding.
-- [ ] Tempo: signing adapter, receipt handling and compatible policy enforcement.
-- [ ] Tempo: one policy-bound payment with a verified receipt.
+- [x] Tempo: rail adapter with network, asset, fee and signer binding.
+- [x] Tempo: signing adapter, receipt handling and compatible policy enforcement.
+- [x] Tempo: frontend payment workspace and Rust CLI payment and recovery.
+- [x] Tempo: Machine Payments Protocol (MPP) purchases bound to service challenges, with response reports across SDK, backend, CLI and app.
+- [ ] Tempo: one policy-bound payment with a verified receipt on a public network.
 - [ ] Hosted generic generation and preference-provider acceptance.
 - [ ] Event, demo URL, video and presentation.
 
@@ -25,6 +29,7 @@ Hackathon integration outputs: deployed Devnet corporate-action programs, a KASE
 
 - [x] Rust Production runtime with independent frontend and backend routing.
 - [x] PostgreSQL production storage and restore.
+- [x] Production backend configuration: Tempo enabled, KASE RPC configured and KASE agent route requires a bearer token.
 - [ ] Tagged native CLI Release with platform checksums and provenance.
 - [ ] Windows CLI target.
 - [ ] Physical-wallet and selected iPhone acceptance.
