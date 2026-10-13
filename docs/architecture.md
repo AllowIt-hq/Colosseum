@@ -20,43 +20,13 @@ flowchart LR
     Server --> Rails[Tempo / Stellar]
 ```
 
-### Why restricted Rust
+### Policy language
 
-Restricted Rust is the policy language for these reasons:
-
-1. **One mandate source.** The owner approves one policy source. Shared validation keeps workflow views and backend evaluation consistent. Solana programs enforce the native profile.
-2. **Bounded validation.** The compiler accepts only a checked subset and rejects arbitrary native code. Execution is deterministic, with bounded size, depth and integer arithmetic. A policy can branch, but it can call only registered system operations.
-3. **Readable policies.** Compiler output drives workflow blocks in the app, with help text for predefined calls. Other code stays visible as custom code.
-4. **Shared libraries.** Policy rules and the Solana client are Rust crates. Domain modules use the same library model. The CLI, backend and contracts reuse these crates.
-5. **Chain targets.** Solana and Stellar programs use Rust. Each target still needs its own output, ABI and runtime binding.
-
-A policy ends in pass or fail. It can request owner input first, but only the trusted oracle engine can wait. In an on-chain profile, that request fails the transaction. Funds never wait inside a contract for a human.
-
-```mermaid
-flowchart LR
-    Src[Restricted Rust]
-    subgraph Shared[Shared compiler]
-        Comp[Compiler] --> IR[Checked IR]
-    end
-    Src --> Comp
-    IR --> Flow[Workflow view]
-    IR --> Oracle[Oracle evaluator]
-    Oracle -->|unclear| Owner((Owner))
-    IR --> Adapt[Chain adapters]
-    Adapt --> Sbf[Solana artifact]
-    Adapt --> Wasm[Stellar artifact]
-    subgraph Native[Native vault]
-        Tmpl[Daily-limit template] --> Prof[Pinned profile]
-        Params[Owner parameters] --> Prof
-    end
-    Prof --> Vault[(Solana vault)]
-```
-
-Restricted Rust provides one mandate source. Compiler emits checked IR for workflow view and oracle evaluator. Each chain needs its own artifact and ABI, so Solana runs pinned daily-limit template with owner parameters, not compiled owner source.
+Restricted Rust is the single policy source. The compiler checks every branch and emits bounded IR for workflow views and oracle evaluation. A policy ends in pass or fail. Only the oracle can wait for owner input. See [Policy SDK](../doc/policy-sdk.md).
 
 ### One backend
 
-The backend is one Rust process built from four crates: API, engine, storage and integrations. It links the policy SDK as a library, so no separate policy-engine service adds a hop, deployment or failure mode. The engine owns lifecycle state and defines ports that storage and integrations implement, so dependencies have no cycle.
+The backend is one Rust process with API, engine, storage, integration and provider crates. It links the policy SDK as a library, so no separate policy-engine service adds a hop, deployment or failure mode. The engine owns lifecycle state and defines ports that storage and integrations implement, so dependencies have no cycle.
 
 The private `allowit-engine` repository holds the backend. A native HTTP binary and a Vercel function share one application library. A deployment uses SQLite with persistent local storage, or PostgreSQL in production, because function-local files are not durable.
 
@@ -96,7 +66,7 @@ The React and TypeScript frontend lives in the private `app.allowIt.xyz` reposit
 
 ### Policy SDK
 
-The [SDK](../repos/AllowIt-hq--allowit-sdk/README.md) ([GitHub README](https://github.com/AllowIt-hq/allowit-sdk/blob/main/README.md)) has two Rust packages. The root package holds the compiler, checked IR, interpreter, function registry, workflow projection and language server. The `native-rust` package is the Solana client. It checks releases, prepares and signs transactions and checks receipts. This split keeps the compiler independent of any chain.
+The [Policy SDK](../doc/policy-sdk.md) has three Rust libraries. `allowit_sdk` compiles restricted Rust to checked IR and evaluates it. `allowit_native` signs Solana transactions and checks receipts. `allowit_tempo` verifies Tempo plans offline. The compiler stays independent of any chain.
 
 ### Policy Engine and System Functions
 
@@ -104,26 +74,31 @@ The SDK compiler emits checked IR for exact registered system functions. The Rus
 
 Pure policy evaluation performs no HTTP requests and handles no secrets. Host adapters handle credentials and external operations. They reconcile settlement and service delivery. Native custody applies mandatory profile checks independently of owner restrictions. Consumer wallet profiles use offchain evaluation and ordinary wallet transactions without an AllowIt custody contract. Native operation admission fixes the implementation, profile and deployment.
 
-| Vendor / module | Role | Reference |
+| Component / vendor | Role | Reference |
 | --- | --- | --- |
-| AllowIt core | Spending, asset and recipient constraints, owner input and mandatory custody checks. | [Core](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/core.md) |
-| KASE corporate actions | Holder records, coupon payments, redemption and ballots. | [Corporate actions](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/corporate-actions.md) |
+| Rust backend | Authenticated lifecycle state, storage and provider integration ports. | [Backend](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/allowit-rust-server.md) |
+| Policy SDK and language | Compiler, checked IR, evaluator, registry and restricted Rust authoring. | [SDK](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/allowit-sdk.md) · [Language](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/rust-policy-language.md) |
+| Operation lifecycle | Validation, approved execution and atomic institutional custody enforcement. | [Lifecycle](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/lifecycle.md) |
+| Application and execution assurance | Policy review, agent handoff and custody and signing profiles. | [App](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/allowit-app.md) · [Assurance](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/execution-assurance.md) |
+| Native contracts | Solana and Stellar account validation, custody, authority and activation binding. | [Contracts](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/allowit-contracts.md) |
+| AllowIt core | Spending, asset and recipient constraints, owner input and custody checks. | [Core](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/core.md) |
+| KASE corporate actions | Holder records, snapshots, coupons, redemption, ballots and typed instrument requests. | [Operations](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/corporate-actions.md) · [Types](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/types/bond.md) |
 | Jev | Authenticated preference evidence and threshold checks. | [Preference checks](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/core.md#preference-evidence-read) |
-| Host / PaySH | HTTP requests, scoped credentials, payment challenges, and separate settlement and delivery reconciliation. | [Host operations](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/host.md) |
-| Etherfuse | Stablebond discovery, quotes, order preparation and event handling. | [Etherfuse](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/etherfuse.md) |
-| Solana | SPL token transfers and burns, plus swaps through admitted Orca pools. | [Solana](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/solana.md) |
-| Stellar | Token transfers, allowances and burns, plus vault deposits and redemptions. | [Stellar](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/stellar.md) |
-| Tempo | Bond, voting and compliance interfaces, plus token and vault operations. | [Bond and compliance](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/tempo.md) · [Token and vault](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/tempo-token-vault.md) |
+| Host / PaySH | HTTP requests, scoped credentials and discovery. Payment challenges, approved requests and separate settlement and delivery reconciliation. | [Host](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/host.md) · [Types](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/types/paysh.md) |
+| Etherfuse | Stablebond discovery, quotes, orders, events and replacement transaction preparation. | [Adapter](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/etherfuse.md) |
+| Solana | SPL transfers and burns, plus admitted Orca swaps. | [Interfaces](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/solana.md) |
+| Stellar | Native authorization, token transfers, allowances, burns and vault operations. | [Interfaces](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/stellar.md) |
+| Tempo | Bond, voting and compliance interfaces, with token and vault bindings. | [Bond and compliance](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/tempo.md) · [Token and vault](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/tempo-token-vault.md) |
 
 See the [System functions index](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/index.md) for contracts and workflow composition.
 
 ### Native CLI
 
-The [CLI](../repos/AllowIt-hq--allowit-cli/README.md) ([GitHub README](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md)) is one Rust binary for agents and owners. Agent commands (`show`, `eval`, `exec`, `status`) ask the backend to decide. Native `policy` commands run the SDK in-process for generation, signing and RPC. The binary needs no Node runtime and links no backend crate.
+The [CLI](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md) is one Rust binary for agents and owners. Agent commands (`show`, `eval`, `exec`, `status`) ask the backend to decide. Native `policy` commands run the SDK in-process for generation, signing and RPC. The binary needs no Node runtime and links no backend crate.
 
 ### Solana Programs
 
-The [Solana contracts](../repos/AllowIt-hq--allowit-contracts-solana/README.md) ([GitHub README](https://github.com/AllowIt-hq/allowit-contracts-solana/blob/main/README.md)) supply a shared custody program and an immutable policy program. An operator releases these programs once, and each owner creates vault state under that release.
+The [Solana contracts](https://github.com/AllowIt-hq/allowit-contracts-solana/blob/main/README.md) supply a shared custody program and an immutable policy program. An operator releases these programs once, and each owner creates vault state under that release.
 
 The native profile is a fixed, approved daily-limit template with owner-set parameters, not arbitrary owner Rust. Generic Rust policies run through the backend oracle. Vault ABI 2 binds owner, executor, server authority, asset, policy version, action limit, daily limit, standing approval and instance slot. Each spend needs the executor and server authority signatures on one transaction. That transaction binds the server's assessment commitment, nonce, revision, instance slot and an expiry of at most 300 seconds. Custody invokes the policy and moves tokens in one atomic transaction, without judging merchant or purpose. This native vault does not use the generic `execute(request)` gate.
 
@@ -156,18 +131,25 @@ Jev context keeps the full original owner prompts and the full deployed policy. 
 
 A policy revision starts only from an explicit owner request. The backend makes a new draft, checks it with the compiler and waits for owner approval. Thus AllowIt never changes a policy silently.
 
-### Detailed References
+### Rust Backend
 
-- [Rust backend](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/allowit-rust-server.md): Backend crates, lifecycle state, storage and integration ports.
-- [SDK](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/allowit-sdk.md) · [Policy language](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/rust-policy-language.md): Compiler, checked IR, evaluator and registry, with authoring rules for restricted Rust policy source.
-- [Operation lifecycle](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/lifecycle.md): Validation, approved execution and atomic native enforcement for institutional custody.
-- [App](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/allowit-app.md) · [Execution assurance](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/execution-assurance.md): Policy review and private agent handoff, with custody and signing profiles.
-- [Native contracts](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/allowit-contracts.md): Solana and Stellar account validation, custody, authority and activation binding.
-- [Stellar interfaces](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/stellar.md): Native authorization and typed token and vault operations.
-- [KASE instrument types](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/types/bond.md): Instruments, holder positions, snapshots, coupon and redemption requests.
-- [Tempo interfaces](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/tempo.md) · [Tempo token and vault](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/tempo-token-vault.md): Bond, voting and compliance interfaces, with token and vault bindings.
-- [PaySH adapter types](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/types/paysh.md): Discovery, payment challenges, approved requests and delivery records.
-- [Etherfuse adapter](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/etherfuse.md): Quote and order schemas, event handling and replacement transaction preparation.
+The [engine repository](https://github.com/AllowIt-hq/allowit-engine/blob/main/README.md) contains the application backend and standalone policy service. The application backend owns authentication, policy and request lifecycles, storage ports and provider coordination. See [One backend](#one-backend) for its process boundary.
+
+### Application Frontend
+
+The [application](https://github.com/AllowIt-hq/app.allowIt.xyz/blob/main/README.md) provides policy authoring, workflow review and private agent handoff. Its same-origin proxy forwards authenticated requests to the Rust backend. See [Independent frontend](#independent-frontend) for the deployment boundary.
+
+### Stellar Contracts
+
+The [Stellar contracts](https://github.com/AllowIt-hq/allowit-contracts-stellar/blob/main/README.md) supply Soroban policy, custody vault and owner-bound factory contracts. Standing approvals and native limits constrain executor transfers. The factory creates vaults from shared Wasm.
+
+### Website
+
+The [website](https://github.com/AllowIt-hq/allowit.xyz/blob/main/README.md) presents the AllowIt narrative and interactive story and directs visitors to the application.
+
+### Knowledge Workspace
+
+The [knowledge workspace](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/README.md) maintains the canonical wiki, original sources, tooling and repository registry for developer operations.
 
 ### Packaging and Platforms
 

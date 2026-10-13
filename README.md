@@ -104,7 +104,7 @@ See the [full roadmap](docs/roadmap.md).
 
 ## Quick Start
 
-Prerequisites: Git, Rust and an explicitly configured native test environment. Use the [CLI requirements](repos/AllowIt-hq--allowit-cli/README.md#build-from-source) ([GitHub README](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md#build-from-source)).
+Prerequisites: Git, Rust and an explicitly configured native test environment. Use the [CLI requirements](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md#build-from-source).
 
 ```sh
 git clone https://github.com/AllowIt-hq/Colosseum.git
@@ -127,6 +127,7 @@ Follow [commands and API](docs/api.md) for service configuration and the native 
 - [CLI](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md)
 - [Solana Contracts](https://github.com/AllowIt-hq/allowit-contracts-solana/blob/main/README.md)
 - [Architecture](docs/architecture.md)
+- [Policy SDK](doc/policy-sdk.md)
 
 ## License
 
