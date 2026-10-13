@@ -1,7 +1,6 @@
-# AllowIt — Go on. On your terms.
+![AllowIt header with an engraved eye illustration.](assets/allowit-header.png)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-14F195.svg)](LICENSE)
-[![Solana Testnet](https://img.shields.io/badge/Solana-Testnet-9945FF)](https://explorer.solana.com/?cluster=testnet)
+# AllowIt — Go on. On your terms.
 
 > AllowIt lets your AI agents spend and invest, within a policy you set.
 
@@ -98,28 +97,34 @@ See [architecture](docs/architecture.md) for components, signing, persistence an
 Prerequisites: Git, Rust and an explicitly configured native test environment. Use the [CLI requirements](repos/AllowIt-hq--allowit-cli/README.md#build-from-source) ([GitHub README](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md#build-from-source)).
 
 ```sh
-git clone --recurse-submodules https://github.com/AllowIt-hq/Colosseum.git
+git clone https://github.com/AllowIt-hq/Colosseum.git
 cd Colosseum
+git submodule update --init --recursive repos/AllowIt-hq--allowit-sdk repos/AllowIt-hq--allowit-cli repos/AllowIt-hq--allowit-contracts-solana
 cd repos/AllowIt-hq--allowit-cli
 cargo build --locked --release
 ./target/release/allowit --help
 ```
 
-For an existing checkout, run `git submodule update --init --recursive`.
+For an existing checkout, run the same scoped submodule command. The [repository catalog](repos/README.md) lists private repositories and their access requirements.
 
 Follow [commands and API](docs/api.md) for service configuration and the native lifecycle. Configure the accepted release, network, mint and separate owner/executor signers before signing. This repository contains reports and pinned source submodules.
 
 ## Roadmap
 
-- [x] Native Rust SDK and CLI.
-- [x] Rust backend and thin frontend proxy.
-- [x] Bounded Solana Testnet deployment, funding, spending, revocation and withdrawal.
+- [x] Native Rust policy SDK, compiler, language server, Solana client and CLI.
+- [x] Rust backend and independent React frontend with a thin same-origin proxy.
+- [x] Solana Testnet vault lifecycle: deploy, fund, executor spend, revoke, withdraw and recovery.
+- [x] KASE prototype: program for Solana Devnet with operator mandates, bondholder votes, coupons and redemption.
+- [x] KASE prototype: Rust owner and agent APIs, agent skill and issuer console.
+- [ ] KASE shared custody gate for corporate actions, linking the shared `allowit` base library, with SDK, backend, CLI and skill operations.
+- [ ] KASE Devnet demo with exact entitlements and duplicate refusal.
+- [x] Tempo native policy payments with signing, receipt handling and recovery.
+- [x] Tempo Machine Payments Protocol (MPP) purchases bound to service challenges across SDK, backend, CLI and app.
+- [ ] Tempo policy-bound payment with a verified receipt on a public network.
 - [ ] Hosted generic-provider acceptance.
-- [x] PostgreSQL persistence and independent frontend/backend deployments.
-- [ ] Native CLI Release and physical-wallet acceptance.
-- [ ] KASE hackathon prototype: coupons, maturity redemption and holder voting.
-- [ ] Tempo hackathon rail: policy-bound payments and receipt handling.
-- [ ] Additional rails and paid-service delivery.
+- [x] Production runtime, PostgreSQL storage and restore, and Tempo and KASE configuration.
+- [ ] Tagged native CLI Release and physical-wallet acceptance.
+- [ ] Additional rails and service delivery: Stellar, Etherfuse and PaySH.
 
 See the [full roadmap](docs/roadmap.md).
 
