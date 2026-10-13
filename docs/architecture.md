@@ -98,6 +98,25 @@ The React and TypeScript frontend lives in the private `app.allowIt.xyz` reposit
 
 The [SDK](../repos/AllowIt-hq--allowit-sdk/README.md) ([GitHub README](https://github.com/AllowIt-hq/allowit-sdk/blob/main/README.md)) has two Rust packages. The root package holds the compiler, checked IR, interpreter, function registry, workflow projection and language server. The `native-rust` package is the Solana client. It checks releases, prepares and signs transactions and checks receipts. This split keeps the compiler independent of any chain.
 
+### Policy Engine and System Functions
+
+The SDK compiler emits checked IR for exact registered system functions. The Rust backend evaluates the IR with authenticated context, owner rules and bound oracle evidence. Only the host oracle profile can wait for owner input. In an on-chain profile, an owner-input request fails.
+
+Pure policy evaluation performs no HTTP requests and handles no secrets. Host adapters handle credentials and external operations. They reconcile settlement and service delivery. Native custody applies mandatory profile checks independently of owner restrictions. Consumer wallet profiles use offchain evaluation and ordinary wallet transactions without an AllowIt custody contract. Native operation admission fixes the implementation, profile and deployment.
+
+| Vendor / module | Role | Reference |
+| --- | --- | --- |
+| AllowIt core | Spending, asset and recipient constraints, owner input and mandatory custody checks. | [Core](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/core.md) |
+| KASE corporate actions | Holder records, coupon payments, redemption and ballots. | [Corporate actions](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/corporate-actions.md) |
+| Jev | Authenticated preference evidence and threshold checks. | [Preference checks](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/core.md#preference-evidence-read) |
+| Host / PaySH | HTTP requests, scoped credentials, payment challenges, and separate settlement and delivery reconciliation. | [Host operations](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/host.md) |
+| Etherfuse | Stablebond discovery, quotes, order preparation and event handling. | [Etherfuse](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/etherfuse.md) |
+| Solana | SPL token transfers and burns, plus swaps through admitted Orca pools. | [Solana](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/solana.md) |
+| Stellar | Token transfers, allowances and burns, plus vault deposits and redemptions. | [Stellar](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/stellar.md) |
+| Tempo | Bond, voting and compliance interfaces, plus token and vault operations. | [Bond and compliance](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/tempo.md) · [Token and vault](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/tempo-token-vault.md) |
+
+See the [System functions index](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/index.md) for contracts and workflow composition.
+
 ### Native CLI
 
 The [CLI](../repos/AllowIt-hq--allowit-cli/README.md) ([GitHub README](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md)) is one Rust binary for agents and owners. Agent commands (`show`, `eval`, `exec`, `status`) ask the backend to decide. Native `policy` commands run the SDK in-process for generation, signing and RPC. The binary needs no Node runtime and links no backend crate.

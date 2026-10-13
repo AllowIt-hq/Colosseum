@@ -90,7 +90,17 @@ flowchart LR
     RPC --> Programs[Shared custody / policy]
 ```
 
+The Rust policy engine evaluates compiled owner rules with authenticated request context and bound oracle evidence. Host adapters prepare external operations and reconcile results, while native custody applies mandatory profile checks. See [Policy Engine and System Functions](docs/architecture.md#policy-engine-and-system-functions).
+
 See [architecture](docs/architecture.md) for components, signing, persistence and deployment.
+
+## Releases
+
+- **v0.1 — Hackathon MVP:** Rust policy stack, Solana vaults, KASE corporate actions, Tempo payments and basic PaySH wallet integration.
+- **v1.0 — Production Release:** Production hardening, shared KASE custody composition, native CLI release and physical-wallet and Mainnet acceptance.
+- **v2.0 — Additional Rails and Operations:** Stellar, Etherfuse, community verifiers and native-vault PaySH service delivery and recovery.
+
+See the [full roadmap](docs/roadmap.md).
 
 ## Quick Start
 
@@ -108,26 +118,6 @@ cargo build --locked --release
 For an existing checkout, run the same scoped submodule command. The [repository catalog](repos/README.md) lists private repositories and their access requirements.
 
 Follow [commands and API](docs/api.md) for service configuration and the native lifecycle. Configure the accepted release, network, mint and separate owner/executor signers before signing. This repository contains reports and pinned source submodules.
-
-## Roadmap
-
-- [x] Native Rust policy SDK, compiler, language server, Solana client and CLI.
-- [x] Rust backend and independent React frontend with a thin same-origin proxy.
-- [x] Solana Testnet vault lifecycle: deploy, fund, executor spend, revoke, withdraw and recovery.
-- [x] Basic PaySH integration with a simple wallet.
-- [x] KASE: coupons, maturity redemption, holder votes, operator mandates, Rust APIs, agent skill, issuer console and holder register.
-- [x] KASE Devnet demo with exact entitlements and duplicate refusal.
-- [x] Tempo native policy payments with signing, receipt handling and recovery.
-- [x] Tempo Machine Payments Protocol (MPP) purchases bound to service challenges across SDK, backend, CLI and app.
-- [x] Tempo policy-bound payment with a verified receipt on a public network.
-- [x] Event, demo URL, video and presentation.
-- [x] Hosted generic-provider acceptance.
-- [x] Production runtime, PostgreSQL storage and restore, and Tempo and KASE configuration.
-- [ ] KASE shared custody gate and `allowit` base-library composition, with SDK, CLI and holder views.
-- [ ] Tagged native CLI Release and physical-wallet acceptance.
-- [ ] Additional rails and native-vault service delivery and recovery: Stellar, Etherfuse and PaySH.
-
-See the [full roadmap](docs/roadmap.md).
 
 ## Resources
 
