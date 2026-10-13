@@ -133,9 +133,9 @@ See the [full roadmap](docs/roadmap.md).
 
 - [Website](https://allowit.xyz)
 - [Live Application](https://app.allowit.xyz)
-- [SDK](repos/AllowIt-hq--allowit-sdk/README.md) ([GitHub README](https://github.com/AllowIt-hq/allowit-sdk/blob/main/README.md))
-- [CLI](repos/AllowIt-hq--allowit-cli/README.md) ([GitHub README](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md))
-- [Solana Contracts](repos/AllowIt-hq--allowit-contracts-solana/README.md) ([GitHub README](https://github.com/AllowIt-hq/allowit-contracts-solana/blob/main/README.md))
+- [SDK](https://github.com/AllowIt-hq/allowit-sdk/blob/main/README.md)
+- [CLI](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md)
+- [Solana Contracts](https://github.com/AllowIt-hq/allowit-contracts-solana/blob/main/README.md)
 - [Architecture](docs/architecture.md)
 
 ## License
