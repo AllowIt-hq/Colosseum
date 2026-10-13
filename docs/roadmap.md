@@ -21,7 +21,7 @@
 - [x] Tempo: one policy-bound payment with a verified receipt on a public network.
 - [x] Event, demo URL, video and presentation.
 
-Hackathon integration outputs: deployed Devnet corporate-action programs, a KASE servicing skill, a Tempo profile in backend capabilities and CLI support for both.
+Hackathon integration outputs: deployed Devnet corporate-action programs, a KASE servicing skill, a Tempo profile in backend capabilities and Tempo CLI support.
 
 ## v1.0 — Production Release
 

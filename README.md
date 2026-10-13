@@ -120,6 +120,7 @@ Follow [commands and API](docs/api.md) for service configuration and the native 
 - [x] Tempo native policy payments with signing, receipt handling and recovery.
 - [x] Tempo Machine Payments Protocol (MPP) purchases bound to service challenges across SDK, backend, CLI and app.
 - [x] Tempo policy-bound payment with a verified receipt on a public network.
+- [x] Event, demo URL, video and presentation.
 - [x] Hosted generic-provider acceptance.
 - [x] Production runtime, PostgreSQL storage and restore, and Tempo and KASE configuration.
 - [ ] KASE shared custody gate and `allowit` base-library composition, with SDK, CLI and holder views.
