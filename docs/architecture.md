@@ -22,7 +22,7 @@ flowchart LR
 
 ### Policy language
 
-Restricted Rust is the single policy source. The compiler checks every branch and emits bounded IR for workflow views and oracle evaluation. A policy ends in pass or fail. Only the oracle can wait for owner input. See [Policy SDK](../doc/policy-sdk.md).
+Restricted Rust is the single policy source. The compiler checks every branch and emits bounded IR for workflow views and oracle evaluation. A policy ends in pass or fail. Only the oracle can wait for owner input. See [Policy SDK](policy-sdk.md).
 
 ### One backend
 
@@ -66,31 +66,13 @@ The React and TypeScript frontend lives in the private `app.allowIt.xyz` reposit
 
 ### Policy SDK
 
-The [Policy SDK](../doc/policy-sdk.md) has three Rust libraries. `allowit_sdk` compiles restricted Rust to checked IR and evaluates it. `allowit_native` signs Solana transactions and checks receipts. `allowit_tempo` verifies Tempo plans offline. The compiler stays independent of any chain.
+The [Policy SDK](policy-sdk.md) has three Rust libraries. `allowit_sdk` compiles restricted Rust to checked IR and evaluates it. `allowit_native` signs Solana transactions and checks receipts. `allowit_tempo` verifies Tempo plans offline. The compiler stays independent of any chain.
 
 ### Policy Engine and System Functions
 
-The SDK compiler emits checked IR for exact registered system functions. The Rust backend evaluates the IR with authenticated context, owner rules and bound oracle evidence. Only the host oracle profile can wait for owner input. In an on-chain profile, an owner-input request fails.
+The policy engine compiles restricted Rust into checked IR and evaluates each request against owner rules. Pure evaluation handles no credentials or network calls. Host adapters authenticate context and evidence, prepare external operations and reconcile settlement and service delivery.
 
-Pure policy evaluation performs no HTTP requests and handles no secrets. Host adapters handle credentials and external operations. They reconcile settlement and service delivery. Native custody applies mandatory profile checks independently of owner restrictions. Consumer wallet profiles use offchain evaluation and ordinary wallet transactions without an AllowIt custody contract. Native operation admission fixes the implementation, profile and deployment.
-
-| Component / vendor | Role | Reference |
-| --- | --- | --- |
-| Rust backend | Authenticated lifecycle state, storage and provider integration ports. | [Backend](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/allowit-rust-server.md) |
-| Policy SDK and language | Compiler, checked IR, evaluator, registry and restricted Rust authoring. | [SDK](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/allowit-sdk.md) · [Language](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/rust-policy-language.md) |
-| Operation lifecycle | Validation, approved execution and atomic institutional custody enforcement. | [Lifecycle](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/lifecycle.md) |
-| Application and execution assurance | Policy review, agent handoff and custody and signing profiles. | [App](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/allowit-app.md) · [Assurance](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/execution-assurance.md) |
-| Native contracts | Solana and Stellar account validation, custody, authority and activation binding. | [Contracts](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/allowit-contracts.md) |
-| AllowIt core | Spending, asset and recipient constraints, owner input and custody checks. | [Core](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/core.md) |
-| KASE corporate actions | Holder records, snapshots, coupons, redemption, ballots and typed instrument requests. | [Operations](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/corporate-actions.md) · [Types](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/types/bond.md) |
-| Jev | Authenticated preference evidence and threshold checks. | [Preference checks](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/core.md#preference-evidence-read) |
-| Host / PaySH | HTTP requests, scoped credentials and discovery. Payment challenges, approved requests and separate settlement and delivery reconciliation. | [Host](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/host.md) · [Types](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/types/paysh.md) |
-| Etherfuse | Stablebond discovery, quotes, orders, events and replacement transaction preparation. | [Adapter](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/etherfuse.md) |
-| Solana | SPL transfers and burns, plus admitted Orca swaps. | [Interfaces](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/solana.md) |
-| Stellar | Native authorization, token transfers, allowances, burns and vault operations. | [Interfaces](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/stellar.md) |
-| Tempo | Bond, voting and compliance interfaces, with token and vault bindings. | [Bond and compliance](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/tempo.md) · [Token and vault](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/tempo-token-vault.md) |
-
-See the [System functions index](https://github.com/AllowIt-hq/allowit.xyz-project/blob/main/wiki/allowit/system-functions/index.md) for contracts and workflow composition.
+Native custody adds mandatory profile checks. Consumer wallets use offchain evaluation and ordinary wallet transactions. The [Policy SDK guide](policy-sdk.md) describes compiler and evaluation interfaces, authority boundaries, rail adapters and system functions. It includes the full component and vendor reference table.
 
 ### Native CLI
 
