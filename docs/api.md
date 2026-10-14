@@ -116,7 +116,7 @@ The response reports status, policy runtime identity, configured provider availa
 
 ## Native Rust SDK and CLI
 
-See [Policy SDK](../doc/policy-sdk.md) for compiler and embedding interfaces.
+See [Policy SDK](policy-sdk.md) for compiler and embedding interfaces.
 
 The [SDK](https://github.com/AllowIt-hq/allowit-sdk/blob/main/README.md) supplies policy and Solana client libraries. The [CLI](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md) calls native modules directly. The browser uses backend APIs and retains wallet intent checks and an App-owned journal.
 

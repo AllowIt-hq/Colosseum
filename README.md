@@ -127,7 +127,7 @@ Follow [commands and API](docs/api.md) for service configuration and the native 
 - [CLI](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md)
 - [Solana Contracts](https://github.com/AllowIt-hq/allowit-contracts-solana/blob/main/README.md)
 - [Architecture](docs/architecture.md)
-- [Policy SDK](doc/policy-sdk.md)
+- [Policy SDK](docs/policy-sdk.md)
 
 ## License
 
