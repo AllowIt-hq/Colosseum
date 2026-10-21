@@ -1,0 +1,59 @@
+name: Report checks
+on:
+  pull_request:
+  push:
+    branches: [main, prod]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: report-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  links:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 1
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Check local report links
+        shell: python
+        run: |
+          import pathlib, re, subprocess, urllib.parse
+          root = pathlib.Path.cwd()
+          files = subprocess.check_output(['git', 'ls-files', '*.md'], text=True).splitlines()
+          checks = 0
+          for file in files:
+              page = root / file
+              for link in re.findall(r'!?\[[^\]]*\]\(([^)\s]+)(?:\s+"[^"]*")?\)', page.read_text()):
+                  url = urllib.parse.urlsplit(link.strip('<>'))
+                  if url.scheme or url.netloc or not url.path:
+                      continue
+                  target = (page.parent / urllib.parse.unquote(url.path)).resolve()
+                  assert target.is_relative_to(root), f'{file}: link escapes repository: {link}'
+                  assert target.exists(), f'{file}: missing target: {link}'
+                  checks += 1
+          assert checks > 0, 'No relative links checked'
+          print(f'Checked {checks} local report links')
+  team:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 1
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Check approved team roles
+        shell: python
+        run: |
+          from pathlib import Path
+          report = Path('README.md').read_text()
+          roles = {
+              'Alex Astrum': 'tech, vision and SI alignment',
+              'Max': 'BD, marketing and operations',
+              'Igor Stolyarov': 'software engineering (front-end)',
+              'Mukhammedali Beriktassuly': 'software engineering (smart contracts)',
+          }
+          for name, role in roles.items():
+              assert f'| {name} | {role} |' in report, f'Missing approved team role: {name}'
+          print(f'Checked {len(roles)} approved team roles')
