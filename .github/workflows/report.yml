@@ -8,7 +8,7 @@ permissions:
   contents: read
 concurrency:
   group: report-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
   links:
     runs-on: ubuntu-24.04
