@@ -96,7 +96,15 @@ Release metadata identifies the pinned sources and artifacts. It does not prove 
 POST /api/native/export
 ```
 
-**Request:** `{policyId}` identifies the saved policy. The owner session receives verified state, the skill and an executor bundle with a private audit capability. Give that bundle only to the designated executor. The capability permits proof reporting, not owner actions or signing.
+**Request:** `{policyId}` identifies the saved policy. The owner session receives verified state, the skill and an executor bundle with a private audit capability. Give that bundle only to the designated executor. The capability permits executor requests and proof reporting, not owner actions or signing.
+
+### Request Executor Approval
+
+```text
+POST /api/native/execute
+```
+
+**Request:** `{policyId, requestId, action, merchant, context, options: {amount, recipient}}` with the scoped capability from `native/export`. The backend evaluates the owner-bound policy and returns the canonical request, its approval and the exact transaction with only the server authority signature. The executor checks that transaction and adds its own signature. A denial or unresolved owner question returns no signature.
 
 ### Report Executor Proof
 
@@ -118,13 +126,14 @@ The response reports status, policy runtime identity, configured provider availa
 
 See [Policy SDK](policy-sdk.md) for compiler and embedding interfaces.
 
-The [SDK](https://github.com/AllowIt-hq/allowit-sdk/blob/main/README.md) supplies policy and Solana client libraries. The [CLI](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md) calls native modules directly. The browser uses backend APIs and retains wallet intent checks and an App-owned journal.
+The [SDK](https://github.com/AllowIt-hq/allowit-sdk/blob/main/README.md) supplies the policy compiler, the client facade and the Solana client. The [CLI](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md) calls the SDK client facade directly. The browser uses backend APIs and retains wallet intent checks and an App-owned journal.
 
 ### Build and HTTP Commands
 
 
 ```sh
 cd repos/AllowIt-hq--allowit-cli
+python3 scripts/sync-native-sdk.py verify
 cargo build --locked --release
 ./target/release/allowit --help
 ```
@@ -142,18 +151,20 @@ Use the [CLI command reference](https://github.com/AllowIt-hq/allowit-cli/blob/m
 
 ```sh
 allowit policy generate 'Spend up to 5 test tokens per day'
-allowit policy deploy
+allowit policy deploy 10
 allowit policy fund 10
 allowit policy execute RECIPIENT_TOKEN_ACCOUNT 2
 allowit policy status
+allowit policy tune-action 1
 allowit policy tune 0
 allowit policy revoke
 allowit policy withdraw 8
+allowit policy close
 ```
 
-These commands form an example sequence. Each command requires its own result check. `generate` saves parameters and prints the pinned source. `deploy` initializes the vault and standing approval. `fund` deposits the bound token. `execute` takes a token-account address. `tune 0` pauses spending. `revoke` removes approval. `withdraw` uses owner authority.
+These commands form an example sequence. Each command requires its own result check. `generate` saves parameters and prints the pinned source. `deploy` prints an owner browser signing link. The owner wallet signs vault setup, standing approval and initial funding in one intent. `fund` deposits more of the bound token. `execute` takes a token-account address. `tune-action` sets the per-action limit. `tune 0` pauses spending. `revoke` removes approval. `withdraw` and `close` use owner authority.
 
-Configure `ALLOWIT_POLICY_DIR`, `ALLOWIT_NETWORK`, `ALLOWIT_RPC_URL`, `ALLOWIT_MINT`, `ALLOWIT_EXECUTOR` and `ALLOWIT_DEPLOYMENT_FILE`. Set `ALLOWIT_REQUEST_ID` for the intended operation. Keep it unchanged on retries. Owner operations use `ALLOWIT_OWNER_KEYPAIR`. Execution uses `ALLOWIT_EXECUTOR_KEYPAIR` and the public `ALLOWIT_OWNER`. Status needs no signing key. Native commands do not require the ordinary HTTP capability.
+Configure `ALLOWIT_POLICY_DIR`, `ALLOWIT_NETWORK`, `ALLOWIT_RPC_URL`, `ALLOWIT_MINT`, `ALLOWIT_EXECUTOR`, `ALLOWIT_AUTHORITY` and `ALLOWIT_DEPLOYMENT_FILE`. Set `ALLOWIT_REQUEST_ID` for the intended operation. Keep it unchanged on retries. Deployment uses the public `ALLOWIT_OWNER` and never loads an owner private key. Other owner operations use `ALLOWIT_OWNER_KEYPAIR`. Execution uses `ALLOWIT_EXECUTOR_KEYPAIR`, the public `ALLOWIT_OWNER` and the scoped capability from the imported executor bundle. The server authority key stays on the server. Status needs no signing key. Native commands do not use `ALLOWIT_TOKEN`.
 
 Testnet is the default. Devnet requires explicit network and RPC configuration. The native CLI refuses Mainnet. Amounts are exact decimal strings. See [native configuration](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md#owner-policy-lifecycle).
 
