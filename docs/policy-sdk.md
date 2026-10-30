@@ -27,7 +27,7 @@ A policy is one public, synchronous function:
 
 ```rust
 /// Pay research vendors up to 10 USDC per purchase and 50 USDC per day.
-pub fn execute(ctx: &AllowitEnv) -> allowit::Result {
+pub fn execute(ctx: &AllowitContext) -> allowit::Result {
     // up to 10 USDC per purchase
     allowit::transaction_cap(ctx, &ctx.grant.transaction_cap)?;
     // 50 USDC per day
@@ -38,7 +38,7 @@ pub fn execute(ctx: &AllowitEnv) -> allowit::Result {
 }
 ```
 
-The doc comment holds the owner's original prompt. Each inline comment names the prompt clause that the next call implements. `AllowitEnv` carries the typed owner Grant, proposed protected state and the authenticated request. Grant values hold the owner limits, so a limit change needs no source change.
+The doc comment holds the owner's original prompt. Each inline comment names the prompt clause that the next call implements. `AllowitContext` carries the typed owner Grant, proposed protected state and the authenticated request. Grant values hold the owner limits, so a limit change needs no source change.
 
 ## Canonical rules
 
@@ -59,7 +59,7 @@ A rule returns only its passing constraint or an error. Cap results already incl
 
 Expenses include fees, gas and realized loss. Retained swap principal is not an expense. `day_total_cap` counts the gross amount, including principal, plus attributable gas.
 
-The policy is conservative. An unset Grant value returns `MissingGrant`. Only the standard preflight runner skips unset values.
+The policy is conservative. An unset Grant value returns `AllowitError::MissingGrant`. Only the standard preflight runner skips unset values.
 
 Server classifiers return a score in [0,1] or a category name.
 

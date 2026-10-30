@@ -22,9 +22,9 @@ flowchart LR
 
 ### Policy language
 
-One Rust source defines each policy. Its entry point is `pub fn execute(ctx: &AllowitEnv) -> allowit::Result`. The function is synchronous. Its doc comment holds the owner's original prompt. `AllowitEnv` carries the typed owner Grant, protected state and the authenticated request.
+One Rust source defines each policy. Its entry point is `pub fn execute(ctx: &AllowitContext) -> allowit::Result`. The function is synchronous. Its doc comment holds the owner's original prompt. `AllowitContext` carries the typed owner Grant, protected state and the authenticated request.
 
-Each rule call has one form: `allowit::<rule>(ctx, &ctx.grant.<rule>)?`. A rule returns only its passing constraint or an error. A cap returns the amount left. `recipients` returns the matched address, and `tokens` returns the matched asset. `expiry` returns the seconds left. An unset Grant value denies with `MissingGrant`.
+Each rule call has one form: `allowit::<rule>(ctx, &ctx.grant.<rule>)?`. A rule returns only its passing constraint or an error. A cap returns the amount left. `recipients` returns the matched address, and `tokens` returns the matched asset. `expiry` returns the seconds left. An unset Grant value denies with `AllowitError::MissingGrant`.
 
 The canonical rules are `transaction_cap`, `spent_cap`, `day_spent_cap`, `day_total_cap`, `call_cap`, `recipients`, `tokens` and `expiry`. See [Canonical rules](policy-sdk.md#canonical-rules) for owner limits.
 
