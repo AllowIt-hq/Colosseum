@@ -24,7 +24,7 @@ flowchart LR
 
 One Rust source defines each policy. Its entry point is `pub fn execute(ctx: &AllowitEnv) -> allowit::Result`. The function is synchronous. Its doc comment holds the owner's original prompt. `AllowitEnv` carries the typed owner Grant, protected state and the authenticated request.
 
-Each rule call has one form: `allowit::<rule>(ctx, &ctx.grant.<rule>)?`. A rule returns only its passing constraint or an error. A cap returns the amount left. An allowlist returns the matched address. `expiry` returns the seconds left. An unset Grant value denies with `MissingGrant`.
+Each rule call has one form: `allowit::<rule>(ctx, &ctx.grant.<rule>)?`. A rule returns only its passing constraint or an error. A cap returns the amount left. `recipients` returns the matched address, and `tokens` returns the matched asset. `expiry` returns the seconds left. An unset Grant value denies with `MissingGrant`.
 
 | Rule | Owner limit |
 | --- | --- |
@@ -41,7 +41,7 @@ The same source compiles unchanged for three targets: the server, custom contrac
 
 ### One backend
 
-The application server is one Rust process. It links the policy SDK and the SDK service facade as libraries, so policy evaluation adds no network hop, deployment or failure mode. Its packages are `api`, `policy`, `services`, `storage`, `integrations`, `llm` and model-provider adapters. The `policy` package owns lifecycle state and defines ports. The `api`, `services`, `storage`, `integrations` and `llm` packages depend on `policy`. Storage and integrations implement its ports, so dependencies point inward without cycles.
+The application server is one Rust process. It links the policy SDK and the SDK service facade as libraries, so policy evaluation adds no network hop, deployment or failure mode. Its packages are `api`, `policy`, `services`, `storage`, `integrations`, `llm` and model-provider adapters. The `policy` package owns lifecycle state and defines ports. The `api`, `services`, `storage`, `integrations` and `llm` packages depend on `policy`. The `api` package also calls `services` and `integrations`, and `services` also calls `storage` and `integrations`. Storage and integrations implement its ports. The packages form no dependency cycle.
 
 The private `allowit-engine` repository holds the backend. A native HTTP binary and a Vercel function share one application library. A deployment uses PostgreSQL, or SQLite with persistent local storage, because function-local files are not durable. The same repository holds two separate services: a standalone policy oracle and a policy authoring agent.
 
@@ -66,10 +66,14 @@ flowchart TB
     Root -->|binds| Svc
     Root -->|binds| LLM
     API -->|typed commands| Core
+    API --> Svc
+    API --> IO
     Core --> Ports
     Store -->|implements| Ports
     IO -->|implements| Ports
     Svc -->|uses| Core
+    Svc --> Store
+    Svc --> IO
     Core -->|in-process| SDK[Policy SDK]
     Svc -->|in-process| Facade[SDK services]
     Facade --> Vendors[Rail vendor packages]
@@ -87,7 +91,7 @@ The React and TypeScript frontend lives in the private `app.allowIt.xyz` reposit
 
 ### Policy SDK
 
-The [SDK](https://github.com/AllowIt-hq/allowit-sdk/blob/main/README.md) splits into Rust crates. `allowit-sdk` checks and compiles policy source. `allowit-client` is the client facade for the CLI. `allowit-native` builds and signs Solana transactions and checks receipts. `allowit-services` gives the server one interface to service vendors and rail protocols. `allowit-stellar-wallet` is the Stellar wallet client. The client facade links the Solana and Tempo vendor crates from their rail repositories at exact revisions. The compiler has no chain dependency. See [Policy SDK](policy-sdk.md).
+The [SDK](https://github.com/AllowIt-hq/allowit-sdk/blob/main/README.md) splits into Rust crates. `allowit-sdk` checks and compiles policy source. `allowit-client` is the client facade for the CLI. `allowit-native` builds and signs Solana transactions and checks receipts. `allowit-services` gives the server one interface to service vendors and rail protocols. `allowit-stellar-wallet` is the Stellar wallet client. `allowit-tempo` is the Tempo rail client over the Tempo vendor crate. The client facade links the Solana and Tempo vendor crates from their rail repositories at exact revisions. The compiler has no chain dependency. See [Policy SDK](policy-sdk.md).
 
 ### Policy Engine and System Functions
 
@@ -103,7 +107,7 @@ The [CLI](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md) is one 
 
 The [Solana contracts](https://github.com/AllowIt-hq/allowit-contracts-solana/blob/main/README.md) supply three programs: a shared custody vault, an immutable policy helper and a separate PaySH program. An operator releases the vault and policy programs once, and each owner creates vault state under that release.
 
-The native vault profile is a fixed, approved template with owner-set parameters, not arbitrary owner Rust. The policy helper runs `require_approval(ctx)?; enforce_daily_limit(ctx)`. Vault ABI 2 binds owner, executor, server authority, asset, policy version, action limit, daily limit, standing approval and instance slot. `action_limit` caps one transfer. `daily_limit` caps gross transfers in one UTC day, up to 50,000,000 units. A zero daily limit pauses spending. Each spend needs the executor and server authority signatures on one transaction. That transaction binds the server's assessment commitment, nonce, revision, instance slot and an expiry of at most 300 seconds. Custody invokes the policy and moves tokens in one atomic transaction, without judging merchant or purpose.
+The native vault profile is a fixed, approved template with owner-set parameters, not arbitrary owner Rust. The policy program checks standing approval and the daily limit. Vault ABI 2 binds owner, executor, server authority, asset, policy version, action limit, daily limit, standing approval and instance slot. `action_limit` caps one transfer. `daily_limit` caps gross transfers in one UTC day, up to 50,000,000 units. A zero daily limit pauses spending. Each spend needs the executor and server authority signatures on one transaction. That transaction binds the server's assessment commitment, nonce, revision, instance slot and an expiry of at most 300 seconds. Custody invokes the policy and moves tokens in one atomic transaction, without judging merchant or purpose.
 
 The PaySH program makes bounded USDC payments to one approved vendor and swaps SOL to USDC through one pinned Orca Whirlpool pool. It verifies an evaluator-signed `execute(request)`, an owner-committed service allowlist, replay receipts, period budgets and exact effects. It keeps its own ABI, counters and recovery path. Unlike the vault and policy programs, PaySH is upgradeable, so its recorded upgrade authority controls its custody.
 
@@ -160,7 +164,7 @@ The private `app.allowIt.xyz` repository provides policy authoring, workflow rev
 
 ### Stellar Contracts
 
-The [Stellar contracts](https://github.com/AllowIt-hq/allowit-contracts-stellar/blob/main/README.md) supply owner-controlled Soroban policy wallets. Standard wallets run canonical rule checks, and custom wallets compile their own policy. All wallets share custody and administration code.
+The [Stellar contracts](https://github.com/AllowIt-hq/allowit-contracts-stellar/blob/main/README.md) supply owner-controlled Soroban policy wallets. A simple wallet requires agent and server approval, and the server checks the policy. A common wallet adds owner-selected canonical rule checks. A custom wallet compiles its own policy. All wallets share custody and administration code.
 
 ### Website
 
@@ -185,7 +189,7 @@ flowchart LR
     Contracts[Solana programs] --> SBF[Program release]
 ```
 
-The CLI packages one `allowit` binary per platform: Linux x64, macOS Apple Silicon and macOS Intel. Windows uses the Linux build under WSL. The CLI refuses unsupported platforms. The Linux musl build avoids dynamic runtime dependencies. The backend runs as a Vercel function, native binary or container, and the frontend has its own Vercel project. The SDK pins accepted Solana program identities.
+The CLI packages one `allowit` binary per platform: Linux x64, macOS Apple Silicon and macOS Intel. Windows uses the Linux build under WSL. Private key storage requires a POSIX filesystem. The Linux musl build avoids dynamic runtime dependencies. The backend runs as a Vercel function, native binary or container, and the frontend has its own Vercel project. The SDK pins accepted Solana program identities.
 
 ### Corporate Actions and Rails
 

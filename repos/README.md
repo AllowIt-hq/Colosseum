@@ -42,7 +42,7 @@ The AllowIt story website at [allowit.xyz](https://allowit.xyz). It contains the
 
 [GitHub](https://github.com/AllowIt-hq/allowit-contracts-stellar)
 
-Owner-controlled Soroban policy wallets for Stellar. Standard and custom wallets share custody and administration code. The owner controls configuration, pause and recovery.
+Owner-controlled Soroban policy wallets for Stellar. Simple, common and custom wallets share custody and administration code. The owner controls configuration, pause and recovery.
 
 ## AllowIt Project
 

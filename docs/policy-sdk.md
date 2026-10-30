@@ -14,6 +14,7 @@ See [architecture](architecture.md) for system boundaries and the [SDK README](h
 | `allowit-native` | Solana transactions, local signing, RPC, receipt checks and recovery |
 | `allowit-services` | Server interface to service vendors and rail protocols |
 | `allowit-stellar-wallet` | Stellar wallet client |
+| `allowit-tempo` | Tempo rail client over the Tempo vendor crate |
 | `allowit-service-core`, `allowit-service-transport` | Shared service types and bounded transports |
 
 The MIT-licensed compiler has no chain dependency. The client and service facades link the Solana and Tempo vendor crates from their rail repositories at exact revisions. The Solana vendor and PaySH service packages live in the Solana contracts repository.
