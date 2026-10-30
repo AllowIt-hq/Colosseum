@@ -27,8 +27,8 @@
 - [x] PostgreSQL production storage and restore.
 - [x] Production backend configuration: Tempo enabled, KASE RPC configured and KASE agent route requires a bearer token.
 - [x] Hosted generic generation and preference-provider acceptance.
-- [ ] Compose KASE corporate actions with the shared `allowit` base library and custody gate.
-- [ ] Add KASE SDK and CLI operations, plus holder views for the shared custody gate.
+- [ ] Compose KASE corporate actions with the AllowIt policy gate.
+- [ ] Add KASE SDK and CLI operations and holder views.
 - [ ] Tagged native CLI Release with platform checksums and provenance.
 - [ ] Windows CLI target.
 - [ ] Physical-wallet and selected iPhone acceptance.

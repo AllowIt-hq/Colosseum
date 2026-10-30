@@ -37,17 +37,17 @@ Generic policy review and owner questions:
 
 Native vault setup:
 
-1. **Approve.** You sign vault setup and standing approval in your wallet. You fund the vault separately.
+1. **Approve.** You sign vault setup, standing approval and initial funding in one wallet intent. You can add funds later.
 2. **Authorize agent.** Your agent receives its skill and private executor configuration.
 3. **Work.** The executor spends within the daily limit. Requests outside it fail.
-4. **Control.** You pause, tune the limit, revoke or withdraw at any time.
+4. **Control.** You pause, tune the daily and per-action limits, revoke or withdraw at any time.
 
 ## Core Value Propositions
 
 1. **Your terms.** Each agent gets the autonomy and resource access that you choose.
 2. **Your judgement.** A dialogue with the policy engine lets you explain what you mean. Your feedback personalizes your policies.
 3. **Their pace.** Within your terms, agents finish their work without asking you about each step.
-4. **Your control.** In the native vault, pause spending, tune the limit, revoke approval or withdraw at any time.
+4. **Your control.** In the native vault, pause spending, tune the daily and per-action limits, revoke approval or withdraw at any time.
 
 ### Requirements
 
@@ -59,7 +59,7 @@ Native vault setup:
 | FR-4 | Enforce a native daily-limit vault with standing approval. |
 | FR-5 | Let native vault owners pause, tune, revoke and withdraw. |
 | FR-6 | Give agents one CLI with no access to owner keys. |
-| FR-7 | Service KASE corporate actions: coupons, maturity redemption and advisory votes. |
+| FR-7 | Service KASE corporate actions: coupons, maturity redemption and holder votes. |
 | FR-8 | Pay on the Tempo rail under owner policy. |
 | FR-9 | Let agents delegate to sub-agents within the owner's terms. |
 
@@ -72,7 +72,7 @@ Native vault setup:
 
 ### Scope
 
-The native vault profile uses Solana Testnet and test tokens. The KASE demonstration uses Solana Devnet, a test bond and test settlement tokens. Corporate actions snapshot holders at each record date, pay exact entitlements and record advisory votes. Tempo payments bind network, asset, fees and signer, with verified receipts. See the [roadmap](roadmap.md) for delivery status.
+The native vault profile uses Solana Testnet and test tokens. The KASE demonstration uses Solana Devnet, a test bond and test settlement tokens. Corporate actions snapshot holders at each record date, pay exact entitlements and record holder votes. Tempo payments bind network, asset, fees and signer, with verified receipts. See the [roadmap](roadmap.md) for delivery status.
 
 ### Success criteria
 
@@ -94,6 +94,6 @@ The native vault profile uses Solana Testnet and test tokens. The KASE demonstra
 
 ### Boundaries
 
-The native vault enforces asset, approval and daily limit. The backend evaluates preferences and routes unclear requests to the owner.
+The native vault enforces asset, approval, per-action limit and daily limit. The backend evaluates preferences and routes unclear requests to the owner.
 
 [Architecture](architecture.md) · [Roadmap](roadmap.md)

@@ -56,8 +56,8 @@ AllowIt lets the agents that work for you act with the autonomy and resource acc
 
 ## Summary of Features
 
-- Native Rust SDK and CLI with separate policy and Solana client packages.
-- Rust backend with API, lifecycle, storage and integration crates.
+- Native Rust policy compiler, client facade, Solana client and CLI.
+- Rust backend with API, policy, services, storage and integration packages.
 - React frontend with a thin API proxy and owner wallet signing.
 - Pinned native policy, vault initialization, standing approval and funding.
 - Executor transfers within the daily limit, with finalized receipt checks.
@@ -70,10 +70,10 @@ See [product](docs/product.md) for users and policy profiles.
 
 | Layer | Technology |
 | --- | --- |
-| On-chain programs | Native Rust Solana policy and custody programs, classic SPL Token |
-| SDK / Client | Native Rust policy SDK, separate Solana SDK, native Rust CLI |
+| On-chain programs | Native Rust Solana custody vault, policy and PaySH programs, classic SPL Token, Orca Whirlpool swap adapter |
+| SDK / Client | Native Rust policy compiler, client facade and Solana client, native Rust CLI |
 | Frontend | React, Vite, TypeScript, Wallet Standard, IndexedDB journal |
-| Backend | Rust API, engine, storage and integration crates |
+| Backend | Rust API, policy, services, storage and integration packages |
 | Hosted transport and storage | Thin TypeScript proxy, Vercel Rust function, PostgreSQL |
 | Testing | SDK/CLI checks, compiled-program tests, browser tests and Testnet receipts |
 
@@ -87,10 +87,10 @@ flowchart LR
     Backend --> SQL[(SQL state / recovery)]
     Backend --> RPC[Solana RPC]
     Agent -->|local native SDK / signing| RPC
-    RPC --> Programs[Shared custody / policy]
+    RPC --> Programs[Custody vault / policy / PaySH]
 ```
 
-The Rust policy engine evaluates compiled owner rules with authenticated request context and bound oracle evidence. Host adapters prepare external operations and reconcile results, while native custody applies mandatory profile checks. See [Policy Engine and System Functions](docs/architecture.md#policy-engine-and-system-functions).
+One Rust policy source runs on the server. The native vault maps `transaction_cap`, `day_total_cap` and `tokens`. The PaySH program maps `tokens`, `recipients` and `expiry`, and caps swap input per call. The server evaluates the complete policy with authenticated request context and bound oracle evidence. Host adapters prepare external operations and reconcile results. See [Policy language](docs/architecture.md#policy-language).
 
 See [architecture](docs/architecture.md) for components, signing, persistence and deployment.
 
@@ -104,13 +104,14 @@ See the [full roadmap](docs/roadmap.md).
 
 ## Quick Start
 
-Prerequisites: Git, Rust and an explicitly configured native test environment. Use the [CLI requirements](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md#build-from-source).
+Prerequisites: Git, Rust, Python 3 and an explicitly configured native test environment. Use the [CLI requirements](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md#build-from-source).
 
 ```sh
 git clone https://github.com/AllowIt-hq/Colosseum.git
 cd Colosseum
 git submodule update --init --recursive repos/AllowIt-hq--allowit-sdk repos/AllowIt-hq--allowit-cli repos/AllowIt-hq--allowit-contracts-solana
 cd repos/AllowIt-hq--allowit-cli
+python3 scripts/sync-native-sdk.py verify
 cargo build --locked --release
 ./target/release/allowit --help
 ```
