@@ -70,10 +70,10 @@ See [product](docs/product.md) for users and policy profiles.
 
 | Layer | Technology |
 | --- | --- |
-| On-chain programs | Native Rust Solana policy and custody programs, classic SPL Token |
-| SDK / Client | Native Rust policy SDK, separate Solana SDK, native Rust CLI |
+| On-chain programs | Native Rust Solana custody vault, policy and PaySH programs, classic SPL Token, Orca Whirlpool swap adapter |
+| SDK / Client | Native Rust policy compiler, client facade and Solana client, native Rust CLI |
 | Frontend | React, Vite, TypeScript, Wallet Standard, IndexedDB journal |
-| Backend | Rust API, engine, storage and integration crates |
+| Backend | Rust API, policy, services, storage and integration packages |
 | Hosted transport and storage | Thin TypeScript proxy, Vercel Rust function, PostgreSQL |
 | Testing | SDK/CLI checks, compiled-program tests, browser tests and Testnet receipts |
 
@@ -87,10 +87,10 @@ flowchart LR
     Backend --> SQL[(SQL state / recovery)]
     Backend --> RPC[Solana RPC]
     Agent -->|local native SDK / signing| RPC
-    RPC --> Programs[Shared custody / policy]
+    RPC --> Programs[Custody vault / policy / PaySH]
 ```
 
-The Rust policy engine evaluates compiled owner rules with authenticated request context and bound oracle evidence. Host adapters prepare external operations and reconcile results, while native custody applies mandatory profile checks. See [Policy Engine and System Functions](docs/architecture.md#policy-engine-and-system-functions).
+One Rust policy source runs on the server, and native custody enforces its leading canonical rules. The server evaluates the complete policy with authenticated request context and bound oracle evidence. Host adapters prepare external operations and reconcile results. See [Policy language](docs/architecture.md#policy-language).
 
 See [architecture](docs/architecture.md) for components, signing, persistence and deployment.
 
