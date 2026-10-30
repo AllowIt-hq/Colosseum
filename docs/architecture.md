@@ -117,30 +117,28 @@ Host crates in the same repository run offchain. The Solana vendor crate gives t
 
 ### Owner Feedback Lifecycle
 
-Jev is the semantic oracle. It is a model service that scores semantic questions, such as preference fit. The trusted oracle engine in the backend sends Jev each question with bound context, checks the result and evaluates the policy. A Jev result is evidence only. Policy rules, limits and custody checks stay hard checks, and Jev cannot override them.
+Jev is the semantic oracle. A policy asks it one question through `allowit::systemone`. Jev returns a score in [0,1], which is evidence only. Policy rules, limits and custody checks stay hard checks, and Jev cannot override them.
+
+Jev's context is only the ordered list of earlier policy calls in the same run and their returned values, including enrichment data. It excludes owner prompts, policy source and the drafting conversation. `allowit::clear_systemone_context` drops the list up to and including that call.
 
 ```mermaid
 flowchart TB
     Prompts[Owner prompts] --> Draft[Rust draft]
     Draft --> Review[Owner review]
     Review -->|approve| Active[Deployed policy]
-    Active --> Eval{Oracle engine<br/>assesses request}
-    Jev[Jev semantic oracle] -->|scores as evidence| Eval
-    Eval -->|pass| Act[Agent acts]
-    Eval -->|fail| Deny[Denied]
-    Eval -->|unclear| Ask[Ask owner]
-    Ask --> Answer[Signed approve / deny<br/>Optional reason note]
-    Answer -->|this request only| Eval
-    Prompts -->|full text| Ctx[Jev context]
-    Active -->|full source| Ctx
-    Answer -->|request + answer + note| Ctx
-    Ctx -->|steers later scores| Jev
+    Active --> Run[Policy run]
+    Run -->|earlier calls + results| Jev[Jev systemone]
+    Jev -->|score| Run
+    Run -->|unclear| Ask[Ask owner]
+    Ask -->|signed answer as call result| Run
+    Run -->|pass| Act[Agent acts]
+    Run -->|fail| Deny[Denied]
     Revise[Owner revision request] --> Draft
 ```
 
 The backend drafts policy source from owner prompts and checks it with the real compiler. The owner revises through dialogue and approves one revision.
 
-Jev context keeps the full original owner prompts and the full deployed policy. When an assessment is unclear, the owner wallet signs approve or deny for that exact assessed request. The owner can add a reason note of up to 2000 UTF-8 bytes. The signed challenge binds that note. The context keeps the assessed request, the answer and the note for the same policy revision. Jev uses these records to steer later semantic scores. A note grants no authority and cannot override policy limits or hard checks. An answer does not change the policy.
+When a score falls between the owner's thresholds, the owner wallet signs approve or deny for that exact request. The answer becomes the result of that `systemone` call, so later calls in the same run see it. An answer grants no authority and does not change the policy.
 
 A policy revision starts only from an explicit owner request. The backend makes a new draft, checks it with the compiler and waits for owner approval. Thus AllowIt never changes a policy silently.
 
