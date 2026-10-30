@@ -52,13 +52,14 @@ Private knowledge workspace for AllowIt. It contains the project wiki, original 
 
 ## Retrieve the pinned sources
 
-The SDK, CLI and Solana contracts can be retrieved without access to private repositories:
+The SDK, CLI and contract repositories can be retrieved without access to private repositories:
 
 ```sh
 git submodule update --init --recursive \
   repos/AllowIt-hq--allowit-sdk \
   repos/AllowIt-hq--allowit-cli \
-  repos/AllowIt-hq--allowit-contracts-solana
+  repos/AllowIt-hq--allowit-contracts-solana \
+  repos/AllowIt-hq--allowit-contracts-stellar
 ```
 
 The application, engine, website and knowledge workspace require authorized GitHub access. With that access, retrieve all pinned repositories:

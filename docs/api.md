@@ -2,7 +2,7 @@
 
 ## AllowIt Backend Endpoints
 
-The frontend proxy forwards versioned API requests with original authentication, cookies and request identity. Owner and public POST routes require an allowlisted frontend Origin. `native/report` uses the bearer audit capability. Owner routes require the authenticated wallet session. Agent reporting credentials grant no owner or signing authority.
+The frontend proxy forwards versioned API requests with original authentication, cookies and request identity. Owner and public POST routes require an allowlisted frontend Origin. `native/execute` and `native/report` use the bearer audit capability. Owner routes require the authenticated wallet session. Agent reporting credentials grant no owner or signing authority.
 
 ### Generate Native Policy
 

@@ -2,7 +2,7 @@
 
 The AllowIt Policy SDK checks, compiles and evaluates owner policies. An owner policy is one Rust source. The compiler checks each policy before owner approval. The same source then compiles unchanged for each execution target.
 
-See [architecture](architecture.md) for system boundaries and the [SDK README](https://github.com/AllowIt-hq/allowit-sdk/blob/main/README.md) for source references.
+See [architecture](architecture.md) for system boundaries and the [SDK repository](https://github.com/AllowIt-hq/allowit-sdk) for build and crate details.
 
 ## Rust crates
 
@@ -19,11 +19,7 @@ See [architecture](architecture.md) for system boundaries and the [SDK README](h
 
 The MIT-licensed compiler has no chain dependency. The client and service facades link the Solana and Tempo vendor crates from their rail repositories at exact revisions. The Solana vendor and PaySH service packages live in the Solana contracts repository.
 
-The server uses the compiler, the native Solana client, other rail clients and the service facade. The CLI uses only the client facade.
-
-## Vendor boundary
-
-Vendor integrations, such as PaySH and Etherfuse, belong outside the core repositories, in their own `vendor-<name>` repository or in their rail repository. A well-abstracted rail covers basic swap, rebalance and data enrichment operations natively, without a vendor package.
+The server uses the compiler, the native Solana client, other rail clients and the service facade. The CLI uses only the client facade. See [Policy Engine and System Functions](architecture.md#policy-engine-and-system-functions) for vendor package placement.
 
 ## Policy source
 
@@ -65,7 +61,7 @@ Expenses include fees, gas and realized loss. Retained swap principal is not an 
 
 The policy is conservative. An unset Grant value returns `MissingGrant`. Only the standard preflight runner skips unset values.
 
-Server classifiers return a confidence in 0..=1 or a category name.
+Server classifiers return a score in [0,1] or a category name.
 
 ## Execution targets
 

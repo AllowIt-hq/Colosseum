@@ -26,24 +26,15 @@ One Rust source defines each policy. Its entry point is `pub fn execute(ctx: &Al
 
 Each rule call has one form: `allowit::<rule>(ctx, &ctx.grant.<rule>)?`. A rule returns only its passing constraint or an error. A cap returns the amount left. `recipients` returns the matched address, and `tokens` returns the matched asset. `expiry` returns the seconds left. An unset Grant value denies with `MissingGrant`.
 
-| Rule | Owner limit |
-| --- | --- |
-| `transaction_cap` | Gross debit of one operation |
-| `spent_cap` | Irreversible expenses over the policy life, including fees, gas and realized loss |
-| `day_spent_cap` | Irreversible expenses in one UTC day |
-| `day_total_cap` | Gross amount plus gas in one UTC day |
-| `call_cap` | Successful operations |
-| `recipients` | Allowed destination addresses |
-| `tokens` | Allowed exact assets |
-| `expiry` | Last time for execution |
+The canonical rules are `transaction_cap`, `spent_cap`, `day_spent_cap`, `day_total_cap`, `call_cap`, `recipients`, `tokens` and `expiry`. See [Canonical rules](policy-sdk.md#canonical-rules) for owner limits.
 
 The same source compiles unchanged for three targets: the server, custom contracts and the standard contract preflight. The preflight enforces only those consecutive leading rule calls that its native profile maps, and skips unset Grant fields. The server or a custom contract runs all other code. See [Solana Programs](#solana-programs) for the Solana mapping. A policy ends in pass or fail. Only the server oracle can wait for owner input. See [Policy SDK](policy-sdk.md).
 
 ### One backend
 
-The application server is one Rust process. It links the policy SDK and the SDK service facade as libraries, so policy evaluation adds no network hop, deployment or failure mode. Its packages are `api`, `policy`, `services`, `storage`, `integrations`, `llm` and model-provider adapters. The `policy` package owns lifecycle state and defines ports. The `api`, `services`, `storage`, `integrations` and `llm` packages depend on `policy`. The `api` package also calls `services` and `integrations`, and `services` also calls `storage` and `integrations`. Storage and integrations implement its ports. The packages form no dependency cycle.
+The application server is one Rust process. It links the policy SDK and the SDK service facade as libraries, so policy evaluation adds no network hop, deployment or failure mode. Its packages are `api`, `policy`, `services`, `storage`, `integrations`, `llm` and model-provider adapters. The `policy` package owns lifecycle state and defines ports. The `api`, `services`, `storage`, `integrations` and `llm` packages depend on `policy`. The `api` package also calls `services` and `integrations`, and `services` also calls `integrations`. Storage and integrations implement its ports. The packages form no dependency cycle.
 
-The private `allowit-engine` repository holds the backend. A native HTTP binary and a Vercel function share one application library. A deployment uses PostgreSQL, or SQLite with persistent local storage, because function-local files are not durable. The same repository holds two separate services: a standalone policy oracle and a policy authoring agent.
+The private `allowit-engine` repository holds the backend. A native HTTP binary and a Vercel function share one application library. A Vercel function uses PostgreSQL. A native binary or container uses PostgreSQL, or SQLite with persistent local storage, because function-local files are not durable. The same repository holds two separate services: a standalone policy oracle and a policy authoring agent.
 
 ```mermaid
 flowchart TB
@@ -72,7 +63,6 @@ flowchart TB
     Store -->|implements| Ports
     IO -->|implements| Ports
     Svc -->|uses| Core
-    Svc --> Store
     Svc --> IO
     Core -->|in-process| SDK[Policy SDK]
     Svc -->|in-process| Facade[SDK services]
@@ -193,7 +183,7 @@ The CLI packages one `allowit` binary per platform: Linux x64, macOS Apple Silic
 
 ### Corporate Actions and Rails
 
-**KASE corporate actions.** KASE is a separate application in the `AllowIt-hq/kase` repository. It runs under an AllowIt policy. Its native Rust Solana program services tokenized bonds: coupons, maturity redemption and holder votes. Holder positions stay in program custody. Each record date seals an immutable snapshot. Later transfers cannot change entitlements fixed at cutoff. Checked integer arithmetic derives each payment and burn, so every party gets the same result. The program also holds the owner limits, so they apply when the agent or backend fails. A KASE service crate applies the policy gate and serves the agent API.
+**KASE corporate actions.** KASE is a separate application in the private `kase` repository. It runs under an AllowIt policy. Its native Rust Solana program services tokenized bonds: coupons, maturity redemption and holder votes. Holder positions stay in program custody. Each record date seals an immutable snapshot. Later transfers cannot change entitlements fixed at cutoff. Checked integer arithmetic derives each payment and burn, so every party gets the same result. The program also holds the owner limits, so they apply when the agent or backend fails. A KASE service crate applies the policy gate and serves the agent API.
 
 **Rails.** Rail adapters isolate differences in network, asset, fees, signature format and clock. Adapters preserve portable rule semantics while binding each rail's native constraints. Each approved rail or profile binds its exact native constraints. Solana, Stellar and Tempo keep separate profiles.
 

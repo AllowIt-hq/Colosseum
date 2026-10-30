@@ -90,7 +90,7 @@ flowchart LR
     RPC --> Programs[Custody vault / policy / PaySH]
 ```
 
-One Rust policy source runs on the server. The native vault maps `transaction_cap`, `day_total_cap` and `tokens`. The PaySH program also maps `recipients` and `expiry`. The server evaluates the complete policy with authenticated request context and bound oracle evidence. Host adapters prepare external operations and reconcile results. See [Policy language](docs/architecture.md#policy-language).
+One Rust policy source runs on the server. The native vault maps `transaction_cap`, `day_total_cap` and `tokens`. The PaySH program maps `tokens`, `recipients` and `expiry`, and caps swap input per call. The server evaluates the complete policy with authenticated request context and bound oracle evidence. Host adapters prepare external operations and reconcile results. See [Policy language](docs/architecture.md#policy-language).
 
 See [architecture](docs/architecture.md) for components, signing, persistence and deployment.
 
