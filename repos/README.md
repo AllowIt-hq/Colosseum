@@ -6,21 +6,19 @@ This directory pins repositories as Git submodules. GitHub opens each repository
 
 [GitHub](https://github.com/AllowIt-hq/allowit-sdk)
 
-Restricted Rust compiler, evaluator, registry and language server. The separate `native-rust/` package supplies the Solana transaction, signing, receipt and journal client. The repository retains JavaScript lifecycle references and generic IR contract adapters. Native custody programs belong to the separate Solana contracts repository. See [architecture](../docs/architecture.md).
+Rust policy compiler, registry and language server, plus the CLI client facade, the native Solana client and the server service facade. The `native-rust/` package supplies the Solana transaction, signing, receipt and journal client. Rail vendor crates live in their rail repositories. The repository retains JavaScript lifecycle references and generic contract adapters. Native custody programs belong to the separate Solana contracts repository. See [architecture](../docs/architecture.md).
 
 ## AllowIt CLI
 
 [GitHub](https://github.com/AllowIt-hq/allowit-cli)
 
-The pinned SDK README still describes the action CLI as Go. The CLI supplied here uses Rust.
-
-Native Rust agent and owner commands. HTTP commands use the service API. Native policy commands embed the SDK. See [commands](../docs/api.md).
+Native Rust agent and owner commands. The binary calls the SDK client facade. HTTP commands use the service API. Native policy commands run the SDK in-process. See [commands](../docs/api.md).
 
 ## AllowIt Solana Contracts
 
 [GitHub](https://github.com/AllowIt-hq/allowit-contracts-solana)
 
-Shared native Rust policy and custody programs. Owner instances create PDA state and SPL token accounts under an accepted shared release. See [architecture](../docs/architecture.md).
+Shared native Rust custody vault and policy programs, plus a separate PaySH program for bounded payments and swaps. Owner instances create PDA state and SPL token accounts under an accepted shared release. Offchain host crates supply the Solana vendor adapter and PaySH service packages. See [architecture](../docs/architecture.md).
 
 ## AllowIt Application
 
@@ -32,7 +30,7 @@ Consumer frontend for policy authoring, owner wallet approvals, agent access and
 
 [GitHub](https://github.com/AllowIt-hq/allowit-engine)
 
-Rust backend and headless policy service. It handles authentication, policy evaluation, durable requests, owner questions, spending reservations and execution receipts.
+Rust backend, standalone policy oracle and policy authoring agent. The backend handles authentication, policy evaluation, durable requests, owner questions, spending reservations and execution receipts.
 
 ## AllowIt Website
 
@@ -44,11 +42,11 @@ The AllowIt story website at [allowit.xyz](https://allowit.xyz). It contains the
 
 [GitHub](https://github.com/AllowIt-hq/allowit-contracts-stellar)
 
-Native Rust policy, custody vault and owner-bound factory for Stellar. Contracts enforce standing approvals, daily limits, revocation and owner withdrawal.
+Owner-controlled Soroban policy wallets for Stellar. Standard and custom wallets share custody and administration code. The owner controls configuration, pause and recovery.
 
 ## AllowIt Project
 
-[GitHub](https://github.com/AllowIt-hq/allowit.xyz-project)
+[GitHub](https://github.com/AllowIt-hq/allowit-project)
 
 Private knowledge workspace for AllowIt. It contains the project wiki, original sources, local tooling and application repository registry.
 

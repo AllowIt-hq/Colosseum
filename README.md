@@ -104,13 +104,14 @@ See the [full roadmap](docs/roadmap.md).
 
 ## Quick Start
 
-Prerequisites: Git, Rust and an explicitly configured native test environment. Use the [CLI requirements](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md#build-from-source).
+Prerequisites: Git, Rust, Python 3 and an explicitly configured native test environment. Use the [CLI requirements](https://github.com/AllowIt-hq/allowit-cli/blob/main/README.md#build-from-source).
 
 ```sh
 git clone https://github.com/AllowIt-hq/Colosseum.git
 cd Colosseum
 git submodule update --init --recursive repos/AllowIt-hq--allowit-sdk repos/AllowIt-hq--allowit-cli repos/AllowIt-hq--allowit-contracts-solana
 cd repos/AllowIt-hq--allowit-cli
+python3 scripts/sync-native-sdk.py verify
 cargo build --locked --release
 ./target/release/allowit --help
 ```
