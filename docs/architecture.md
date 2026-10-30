@@ -119,7 +119,7 @@ Host crates in the same repository run offchain. The Solana vendor crate gives t
 
 Jev is the semantic oracle. A policy asks it one question through `allowit::systemone`. Jev returns a score in [0,1], which is evidence only. Policy rules, limits and custody checks stay hard checks, and Jev cannot override them.
 
-Jev's context is only the ordered list of earlier policy calls in the same run and their returned values, including enrichment data. It excludes owner prompts, policy source and the drafting conversation. `allowit::clear_systemone_context` drops the list up to and including that call.
+Jev's context is the ordered list of earlier policy calls in the same run and their returned values, including enrichment data. After the question, a log lists the owner's past decisions with their context, then repeats the question, so Jev learns from overrides. It excludes owner prompts, policy source and the drafting conversation. `allowit::clear_systemone_context` drops the list up to and including that call.
 
 ```mermaid
 flowchart TB
@@ -138,7 +138,7 @@ flowchart TB
 
 The backend drafts policy source from owner prompts and checks it with the real compiler. The owner revises through dialogue and approves one revision.
 
-When a score falls between the owner's thresholds, the owner wallet signs approve or deny for that exact request. The answer becomes the result of that `systemone` call, so later calls in the same run see it. An answer grants no authority and does not change the policy.
+When a score falls between the owner's thresholds, the approval view shows the score on a slider with the automatic thresholds marked. The owner can refetch fresh data; the view follows any changed verdict. The owner wallet signs approve or deny, and execution uses exactly the approved data. The answer becomes the result of that `systemone` call, so later calls in the same run see it. An answer grants no authority and does not change the policy.
 
 A policy revision starts only from an explicit owner request. The backend makes a new draft, checks it with the compiler and waits for owner approval. Thus AllowIt never changes a policy silently.
 

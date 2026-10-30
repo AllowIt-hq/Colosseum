@@ -131,7 +131,7 @@ A preference check asks Jev one literal question. The source cannot substitute a
 
 Policy evaluation is pure. It makes no network call, holds no secrets and reads no files. It cannot ask Jev, sign, settle or read external state.
 
-Missing evidence returns `SEMANTIC_EVIDENCE_REQUIRED` with question and key metadata. The host asks Jev with the exact question and the earlier policy calls and results of the run, and nothing else. It checks and persists the response, then evaluates the same action again. The host must not turn a missing-evidence result into approval. It binds evidence to policy, source, owner, action, amount, recipient, network, asset, intent, context digest and expiry.
+Missing evidence returns `SEMANTIC_EVIDENCE_REQUIRED` with question and key metadata. The host asks Jev with the exact question and the earlier policy calls and results of the run, followed by the owner's past decisions. It checks and persists the response, then evaluates the same action again. The host must not turn a missing-evidence result into approval. It binds evidence to policy, source, owner, action, amount, recipient, network, asset, intent, context digest and expiry.
 
 The host also manages authorization, budgets and recovery. It enforces replay protection, expiry, revocation and fresh budgets. It reconciles settlement and service delivery separately.
 
