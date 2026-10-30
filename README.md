@@ -56,8 +56,8 @@ AllowIt lets the agents that work for you act with the autonomy and resource acc
 
 ## Summary of Features
 
-- Native Rust SDK and CLI with separate policy and Solana client packages.
-- Rust backend with API, lifecycle, storage and integration crates.
+- Native Rust policy compiler, client facade, Solana client and CLI.
+- Rust backend with API, policy, services, storage and integration packages.
 - React frontend with a thin API proxy and owner wallet signing.
 - Pinned native policy, vault initialization, standing approval and funding.
 - Executor transfers within the daily limit, with finalized receipt checks.
@@ -90,7 +90,7 @@ flowchart LR
     RPC --> Programs[Custody vault / policy / PaySH]
 ```
 
-One Rust policy source runs on the server, and native custody enforces its leading canonical rules. The server evaluates the complete policy with authenticated request context and bound oracle evidence. Host adapters prepare external operations and reconcile results. See [Policy language](docs/architecture.md#policy-language).
+One Rust policy source runs on the server. Native custody enforces the canonical rules its profile maps: `transaction_cap`, `day_total_cap` and `tokens`. The server evaluates the complete policy with authenticated request context and bound oracle evidence. Host adapters prepare external operations and reconcile results. See [Policy language](docs/architecture.md#policy-language).
 
 See [architecture](docs/architecture.md) for components, signing, persistence and deployment.
 

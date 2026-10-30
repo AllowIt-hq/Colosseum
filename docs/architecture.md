@@ -37,7 +37,7 @@ Each rule call has one form: `allowit::<rule>(ctx, &ctx.grant.<rule>)?`. A rule 
 | `tokens` | Allowed exact assets |
 | `expiry` | Last time for execution |
 
-The same source compiles unchanged for three targets: the server, custom contracts and the standard contract preflight. The preflight runs only the consecutive leading rule calls and skips unset Grant fields. All other code runs on the server or in a custom contract. A policy ends in pass or fail. Only the server oracle can wait for owner input. See [Policy SDK](policy-sdk.md).
+The same source compiles unchanged for three targets: the server, custom contracts and the standard contract preflight. The preflight enforces only those consecutive leading rule calls that its native profile maps, and skips unset Grant fields. The server or a custom contract runs all other code. See [Solana Programs](#solana-programs) for the Solana mapping. A policy ends in pass or fail. Only the server oracle can wait for owner input. See [Policy SDK](policy-sdk.md).
 
 ### One backend
 
@@ -87,7 +87,7 @@ The React and TypeScript frontend lives in the private `app.allowIt.xyz` reposit
 
 ### Policy SDK
 
-The [SDK](https://github.com/AllowIt-hq/allowit-sdk/blob/main/README.md) splits into Rust crates. `allowit-sdk` checks and compiles policy source. `allowit-client` is the client facade for the CLI. `allowit-native` builds and signs Solana transactions and checks receipts. `allowit-services` gives the server one interface to service vendors and rail protocols. Rail vendor crates live in their rail repositories. The compiler has no chain dependency. See [Policy SDK](policy-sdk.md).
+The [SDK](https://github.com/AllowIt-hq/allowit-sdk/blob/main/README.md) splits into Rust crates. `allowit-sdk` checks and compiles policy source. `allowit-client` is the client facade for the CLI. `allowit-native` builds and signs Solana transactions and checks receipts. `allowit-services` gives the server one interface to service vendors and rail protocols. `allowit-stellar-wallet` is the Stellar wallet client. The client facade links the Solana and Tempo vendor crates from their rail repositories at exact revisions. The compiler has no chain dependency. See [Policy SDK](policy-sdk.md).
 
 ### Policy Engine and System Functions
 
@@ -111,9 +111,9 @@ Native parameters carry the canonical rules:
 
 | Canonical rule | Native vault | PaySH |
 | --- | --- | --- |
-| `transaction_cap` | `action_limit` | Server |
-| `day_total_cap` | `daily_limit` | Server |
-| `tokens` | Bound mint | Configured USDC mint |
+| `transaction_cap` | `action_limit` | Server, plus `max_swap_lamports_per_call` for swaps |
+| `day_total_cap` | `daily_limit` (gross transfers; server adds gas) | Server |
+| `tokens` | Bound mint | Configured USDC mint and WSOL swap input |
 | `recipients` | Server | `vendor_usdc` and `service_allowlist_root` |
 | `expiry` | Server | `policy_expires_timestamp` |
 
@@ -152,11 +152,11 @@ A policy revision starts only from an explicit owner request. The backend makes 
 
 ### Rust Backend
 
-The [engine repository](https://github.com/AllowIt-hq/allowit-engine/blob/main/README.md) contains the application backend, a standalone policy oracle and a policy authoring agent. The application backend owns authentication, policy and request lifecycles, storage ports, paid-operation coordination and provider coordination. The oracle has its own workspace and SDK revision. The authoring agent serves policy drafts over ACP and A2A through the same policy author and compiler. See [One backend](#one-backend) for the process boundary.
+The private `allowit-engine` repository contains the application backend, a standalone policy oracle and a policy authoring agent. The application backend owns authentication, policy and request lifecycles, storage ports, paid-operation coordination and provider coordination. The oracle has its own workspace and SDK revision. The authoring agent serves policy drafts over ACP and A2A through the same policy author and compiler. See [One backend](#one-backend) for the process boundary.
 
 ### Application Frontend
 
-The [application](https://github.com/AllowIt-hq/app.allowIt.xyz/blob/main/README.md) provides policy authoring, workflow review and private agent handoff. Its same-origin proxy forwards authenticated requests to the Rust backend. See [Independent frontend](#independent-frontend) for the deployment boundary.
+The private `app.allowIt.xyz` repository provides policy authoring, workflow review and private agent handoff. Its same-origin proxy forwards authenticated requests to the Rust backend. See [Independent frontend](#independent-frontend) for the deployment boundary.
 
 ### Stellar Contracts
 
@@ -164,11 +164,11 @@ The [Stellar contracts](https://github.com/AllowIt-hq/allowit-contracts-stellar/
 
 ### Website
 
-The [website](https://github.com/AllowIt-hq/allowit.xyz/blob/main/README.md) presents the AllowIt narrative and interactive story and directs visitors to the application.
+The private `allowit.xyz` repository presents the AllowIt narrative and interactive story and directs visitors to the application.
 
 ### Knowledge Workspace
 
-The [knowledge workspace](https://github.com/AllowIt-hq/allowit-project) maintains the canonical wiki, original sources, tooling and repository registry for developer operations.
+The private `allowit-project` knowledge workspace maintains the canonical wiki, original sources, tooling and repository registry for developer operations.
 
 ### Packaging and Platforms
 

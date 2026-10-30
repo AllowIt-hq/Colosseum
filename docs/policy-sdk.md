@@ -13,11 +13,12 @@ See [architecture](architecture.md) for system boundaries and the [SDK README](h
 | `allowit-client-core` | Shared client errors, configuration and private storage |
 | `allowit-native` | Solana transactions, local signing, RPC, receipt checks and recovery |
 | `allowit-services` | Server interface to service vendors and rail protocols |
+| `allowit-stellar-wallet` | Stellar wallet client |
 | `allowit-service-core`, `allowit-service-transport` | Shared service types and bounded transports |
 
-The MIT-licensed compiler has no chain dependency. Rail vendor crates live in their rail repositories, and the client and service facades link them at exact revisions. The Solana vendor and PaySH service packages live in the Solana contracts repository.
+The MIT-licensed compiler has no chain dependency. The client and service facades link the Solana and Tempo vendor crates from their rail repositories at exact revisions. The Solana vendor and PaySH service packages live in the Solana contracts repository.
 
-The server uses the compiler, the native Solana client and the service facade. The CLI uses only the client facade.
+The server uses the compiler, the native Solana client, other rail clients and the service facade. The CLI uses only the client facade.
 
 ## Vendor boundary
 
@@ -75,7 +76,7 @@ flowchart LR
     Check --> Custom[Custom contract]
     Check --> Pre[Standard preflight]
     Server -->|unclear| Owner((Owner))
-    Pre --> Native[(Native custody)]
+    Pre -->|mapped rules| Native[(Native custody)]
     Grant[Owner Grant] --> Server
     Grant --> Custom
     Grant --> Native
@@ -85,7 +86,7 @@ The same source compiles unchanged for three targets:
 
 - **Server.** The server runs the complete policy, including custom code and semantic checks.
 - **Custom contract.** A custom contract compiles the complete policy into its own program.
-- **Standard preflight.** A standard contract runs only the consecutive leading rule calls. It skips unset Grant fields. All later code runs on the server.
+- **Standard preflight.** A standard contract enforces only those consecutive leading rule calls that its native profile maps. It skips unset Grant fields. The server runs all other code. See [Native Solana vault](#native-solana-vault) for the Solana mapping.
 
 A conditional call is custom code. The preflight never turns it into an unconditional native check.
 
@@ -166,7 +167,7 @@ Vault parameters carry the native canonical rules:
 | Canonical rule | Vault parameter |
 | --- | --- |
 | `transaction_cap` | `action_limit` |
-| `day_total_cap` | `daily_limit`, gross transfers per UTC day |
+| `day_total_cap` | `daily_limit`, gross transfers per UTC day; server adds gas |
 | `tokens` | Bound mint |
 
 The owner can tune both limits after setup. A zero daily limit pauses spending. All other rules run on the server. See [Solana Programs](architecture.md#solana-programs) for the PaySH program.

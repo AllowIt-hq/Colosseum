@@ -6,7 +6,7 @@ This directory pins repositories as Git submodules. GitHub opens each repository
 
 [GitHub](https://github.com/AllowIt-hq/allowit-sdk)
 
-Rust policy compiler, registry and language server, plus the CLI client facade, the native Solana client and the server service facade. The `native-rust/` package supplies the Solana transaction, signing, receipt and journal client. Rail vendor crates live in their rail repositories. The repository retains JavaScript lifecycle references and generic contract adapters. Native custody programs belong to the separate Solana contracts repository. See [architecture](../docs/architecture.md).
+Rust policy compiler, registry and language server, plus the CLI client facade, the native Solana client and the server service facade. The `native-rust/` package supplies the Solana transaction, signing, receipt and journal client. The client facade links the Solana and Tempo vendor crates from their rail repositories at exact revisions. The repository retains JavaScript lifecycle references and generic contract adapters. Native custody programs belong to the separate Solana contracts repository. See [architecture](../docs/architecture.md).
 
 ## AllowIt CLI
 
@@ -61,7 +61,7 @@ git submodule update --init --recursive \
   repos/AllowIt-hq--allowit-contracts-solana
 ```
 
-The application, engine, website, Stellar contracts and knowledge workspace require authorized GitHub access. With that access, retrieve all pinned repositories:
+The application, engine, website and knowledge workspace require authorized GitHub access. With that access, retrieve all pinned repositories:
 
 ```sh
 git submodule update --init --recursive
